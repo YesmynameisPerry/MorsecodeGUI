@@ -9,6 +9,7 @@ try:
     from array import array
     from layout import *
     from math import floor,sqrt
+    from random import randint
 
 #if a library is missing
 except ImportError as e:
@@ -212,6 +213,7 @@ def main():
     word = ""
     key = ""
     end = time()
+    start = 0
 
     keydown = False
     while True:
@@ -749,7 +751,7 @@ def main():
                 pygame.draw.rect(window, mckeyvertbardark, mckeycomponents[2])
                 pygame.draw.circle(window, mckeycircledark, (mckeycomponents[0][0], mckeycomponents[0][1]+2), mckeycomponents[1])
                 pygame.display.update()
-            elif (event.type == KEYUP and event.key == K_SPACE) or (event.type == MOUSEBUTTONUP and event.button == 1 and key == "KEY"):
+            elif ((event.type == KEYUP and event.key == K_SPACE) or (event.type == MOUSEBUTTONUP and event.button == 1)) and key == "KEY":
                 key = ""
                 end = time()
                 pygame.draw.rect(window, keyboardcol, mckeyposresults)
@@ -806,6 +808,9 @@ def main():
             else:
                 col = morsebadcol
 
+            if word.lower() == exitword.lower():
+                pygame.quit()
+                exit()
             pygame.draw.rect(window, charstreambackgroundcol, morsestreamresults[1])
             oldkeystring = keystring
             keylength = 0
@@ -836,8 +841,48 @@ def main():
             pygame.draw.rect(window, charstreambackgroundcol, morsestreamresults[1])
             pygame.display.update()
         #go into demo mode (silently show words) if a set amount of inactive time has passed
-        if keystring == "" and time() > end + demotime:
-            print(time())
+        if demoactive:
+            if keystring == "" and time() > end + demotime:
+                indemo = True
+                currentdemotime = time()
+                demoword = demowords[randint(0,len(demowords)-1)].upper()
+                demochar = demoword[0]
+                demokey = reverse_lookup[demochar][0]
+                while indemo:
+                    #allow the user to escape the demo
+                    for event in pygame.event.get():
+                        if event.type == KEYDOWN or event.type == MOUSEBUTTONDOWN:
+                            indemo = False
+                        if event.type == QUIT:
+                            pygame.quit()
+                            exit()
+                    if onapi:
+                        if GPIO.input(gpiokey) == False:
+                            indemo = False
+
+                    if indemo:
+                        #print(demoword,demochar,demokey)
+
+                start = time()
+                end = time()
+
+                """
+                NEVER SLEEP - it will lead to unattractive delays getting back to user control
+                set 'indemo' flag
+                all this is while indemo
+                get random word from list
+                get char from word
+                get keystring of char
+                push keystring to screen
+                if x time passes push letter to screen, clear codestream
+                if y time passes push keystring of next letter
+
+
+                dottodash = 0.25
+                codetochar = 0.75
+                wordtodot = 4
+
+                """
 
 while True:
     try:
