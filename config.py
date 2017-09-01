@@ -61,3 +61,7 @@ mckeycircledark = (mckeycircle[0] - 10 if mckeycircle[0] - 10 > -1 else 0,
 
 #the gpio pin that the physical key is tied to
 gpiokey = 4
+
+#the list of words that will cycle through if left alone for 'demotime' amount of time (seconds)
+dictionary = ["scouts","morse","code","dot","dash","history",]
+demotime = 15
