@@ -57,6 +57,7 @@ def main():
         GPIO.setup(gpiokey,GPIO.IN)
 
     #set it all up
+    pygame.mixer.pre_init(44100, -16, 1, 512)
     pygame.init()
     window = pygame.display.set_mode((xres,yres))#,FULLSCREEN)
     window.fill(backgroundcol)
@@ -85,7 +86,10 @@ def main():
     pygame.draw.rect(window, mckeyvertbar, mckeycomponents[2])
     pygame.draw.circle(window, mckeycircle, mckeycomponents[0], mckeycomponents[1])
 
-
+    #get the sound effects
+    dashsound = pygame.mixer.Sound("dash.ogg")
+    dotsound = pygame.mixer.Sound("dot.ogg")
+    downsound = pygame.mixer.Sound("keydown.ogg")
 
     for pos in keysposresults[0]:
         mid = ((pos[0]+pos[2])/2,(pos[1]+pos[3])/2)
@@ -745,6 +749,7 @@ def main():
                 #The space bar or on-screen key
             elif (event.type == KEYDOWN and event.key == K_SPACE) or (event.type == MOUSEBUTTONDOWN and event.button == 1 and sqrt(((event.pos[0]-mckeycomponents[0][0])**2)+((event.pos[1]-mckeycomponents[0][1])**2)) < mckeycomponents[1]):
                 start = time()
+                downsound.play(-1)
                 key = "KEY"
                 pygame.draw.rect(window, keyboardcol, mckeyposresults)
                 pygame.draw.rect(window, mckeytopbox, mckeycomponents[3])
@@ -754,6 +759,7 @@ def main():
             elif ((event.type == KEYUP and event.key == K_SPACE) or (event.type == MOUSEBUTTONUP and event.button == 1)) and key == "KEY":
                 key = ""
                 end = time()
+                downsound.stop()
                 pygame.draw.rect(window, keyboardcol, mckeyposresults)
                 pygame.draw.rect(window, mckeytopbox, mckeycomponents[3])
                 pygame.draw.rect(window, mckeyvertbar, mckeycomponents[2])
@@ -861,7 +867,7 @@ def main():
                             indemo = False
 
                     if indemo:
-                        #print(demoword,demochar,demokey)
+                        print(demoword,demochar,demokey)
 
                 start = time()
                 end = time()
