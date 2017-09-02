@@ -46,10 +46,10 @@ def main():
     root = tk.Tk()
     root.withdraw()
 
-    xres = int(root.winfo_screenwidth()/1)
+    xres = int(root.winfo_screenwidth()/2)
     #this next line is here because my screen isn't 16:9, but the final result probably will be
-    #yres = int(xres*9.0/16.0)
-    yres = int(root.winfo_screenheight()/1)
+    yres = int(xres*9.0/16.0)
+    #yres = int(root.winfo_screenheight()/1)
 
     if onapi:
         #set up the GPIO for the physical morse code key
@@ -60,7 +60,7 @@ def main():
     #set it all up
     pygame.mixer.pre_init(44100, -16, 1, 512)
     pygame.init()
-    window = pygame.display.set_mode((xres,yres),FULLSCREEN)
+    window = pygame.display.set_mode((xres,yres))#,FULLSCREEN)
     window.fill(backgroundcol)
     pygame.display.set_caption("Morse Code")
 
@@ -75,6 +75,7 @@ def main():
     dashstart = morsestreamarea[0]+dashwidth * 16
     dashradius = morsestreamarea[3]/2
     mckeycomponents = mckeyinnards(mckeyposresults)
+    demoalertresults = demoalertpos(xres,yres)
 
     #draw the various components
     pygame.draw.rect(window, keyboardcol, keyboardposresults)
@@ -125,7 +126,8 @@ def main():
     #setting up the keyboard
     keyboardfont = pygame.font.SysFont("FreeMono",int(keysposresults[2]*6))
     backspacefont = pygame.font.SysFont("FreeMono",int(keysposresults[2]*3))
-    charstreamfont = pygame.font.SysFont("FreeMono",int(charstreamresults[1][3]-1*yres/32))
+    charstreamfont = pygame.font.SysFont("FreeMono",int(charstreamresults[1][3]-yres/32))
+    demoalertfont = pygame.font.SysFont("FreeMono",int(demoalertresults[0][3]-yres/32))
     A = keyboardfont.render("A",True,keytextcol)
     B = keyboardfont.render("B",True,keytextcol)
     C = keyboardfont.render("C",True,keytextcol)
@@ -163,6 +165,7 @@ def main():
     _9 = keyboardfont.render("9",True,keytextcol)
     _0 = keyboardfont.render("0",True,keytextcol)
     BK = backspacefont.render("BK",True,keytextcol)
+    demotext = demoalertfont.render("DEMO",True,demoalerttextcol)
 
     #the list of keys, the first key, the x position
     def putkeys():
@@ -862,10 +865,18 @@ def main():
         #go into demo mode (silently type words) if a set amount of inactive time has passed
         if demoactive:
             if keystring == "" and time() > end + demotime and key == "":
+                pygame.draw.rect(window, demoalertbackgroundcol, demoalertresults[0])
+                pygame.draw.rect(window, demoalertbackgroundcol, demoalertresults[1])
+                window.blit(demotext,((2*demoalertresults[0][0]+demoalertresults[0][2]-demotext.get_width())/2,(2*demoalertresults[0][1]+demoalertresults[0][3]-demotext.get_height())/2))
+                window.blit(demotext,((2*demoalertresults[1][0]+demoalertresults[1][2]-demotext.get_width())/2,(2*demoalertresults[1][1]+demoalertresults[1][3]-demotext.get_height())/2))
                 indemo = True
                 currentdemotime = time()
                 word = ""
-                demoword = demowords[randint(0,len(demowords)-1)].upper()
+                if randomword:
+                    demoword = demowords[randint(0,len(demowords)-1)].upper()
+                else:
+                    wordcount = 0
+                    demoword = demowords[wordcount].upper()
                 demokey = reverse_lookup[demoword[0]]
                 if len(demoword) > 1:
                     demoword = demoword[1:]
@@ -885,6 +896,8 @@ def main():
                             word = ""
                             pygame.draw.rect(window, charstreambackgroundcol, morsestreamresults[1])
                             pygame.draw.rect(window, charstreambackgroundcol, charstreamresults[1])
+                            pygame.draw.rect(window, backgroundcol, demoalertresults[0])
+                            pygame.draw.rect(window, backgroundcol, demoalertresults[1])
                             pygame.display.update()
                         if event.type == QUIT:
                             pygame.quit()
@@ -896,6 +909,8 @@ def main():
                             word = ""
                             pygame.draw.rect(window, charstreambackgroundcol, morsestreamresults[1])
                             pygame.draw.rect(window, charstreambackgroundcol, charstreamresults[1])
+                            pygame.draw.rect(window, backgroundcol, demoalertresults[0])
+                            pygame.draw.rect(window, backgroundcol, demoalertresults[1])
                             pygame.display.update
 
                     if indemo:
@@ -912,7 +927,13 @@ def main():
                             else: demoword = ""
                         if time() > currentdemotime + wordtodot and len(demoword) == 0 and len(keystring) == 0:
                             word = ""
-                            demoword = demowords[randint(0,len(demowords)-1)].upper()
+                            if randomword:
+                                demoword = demowords[randint(0,len(demowords)-1)].upper()
+                            else:
+                                wordcount += 1
+                                if wordcount > len(demowords) - 1:
+                                    wordcount = 0
+                                demoword = demowords[wordcount].upper()
 
                         #copy and pasting the code that draws morse code to the screen
                         if keystring != oldkeystring:
@@ -995,24 +1016,6 @@ def main():
 
                 start = time()
                 end = time()
-
-                """
-                NEVER SLEEP - it will lead to unattractive delays getting back to user control
-                set 'indemo' flag
-                all this is while indemo
-                get random word from list
-                get char from word
-                get keystring of char
-                push keystring to screen
-                if x time passes push letter to screen, clear codestream
-                if y time passes push keystring of next letter
-
-
-                dottodash = 0.25
-                codetochar = 0.75
-                wordtodot = 4
-
-                """
 
 while True:
     try:

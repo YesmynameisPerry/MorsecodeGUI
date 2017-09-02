@@ -77,8 +77,7 @@ reverse_lookup = {
     "7":    "--...",
     "8":    "---..",
     "9":    "----.",
-    "0":    "-----",
-    "........": "Backspace"
+    "0":    "-----"
 }
 
 def getchar(dotdashstring):

@@ -66,7 +66,13 @@ gpiokey = 4
 
 #the list of words that will cycle through if left alone for 'demotime' amount of time (seconds)
 demowords = ["scouts","morse","code","dot","dash","history","joeys","cubs","venturers","rovers","leaders","baden","powell","brownsea"]
-demotime = 5
+demotime = 2
+
+demoalertbackgroundcol = (100,100,100)
+demoalerttextcol = (255,50,50)
+
+#randomly choose words from demowords if True, go through in order and loop if False
+randomword = True
 
 #the time (seconds) of the demo 'animations'
 dottodash = 0.25

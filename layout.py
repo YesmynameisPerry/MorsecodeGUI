@@ -4,7 +4,7 @@
 def keyboardpos(xres,yres):
     ypos = 33*yres/64
     xpos = 5*yres/64
-    ylen = 30*yres/64
+    ylen = 15*yres/32
     xlen = 3*xres/4-xpos
     return(xpos,ypos,xlen,ylen)
 
@@ -31,15 +31,15 @@ def keyspos(keyboardpos):
 #where the on screen morse code key is
 def mckeypos(xres,yres):
     ypos = 17*yres/32
-    xpos = 7*xres/8-1*xres/16
-    ylen = 14*yres/32
-    xlen = 1*xres/8
+    xpos = 7*xres/8-xres/16
+    ylen = 7*yres/16
+    xlen = xres/8
     return(xpos,ypos,xlen,ylen)
 
 #where the character stream is
 def charstreampos(xres,yres):
-    xpos = 1*xres/8
-    ypos = 1*yres/32
+    xpos = xres/8
+    ypos = yres/32
     xlen = 3*xres/4
     ylen = 7*yres/32
     inxpos = xpos + yres/64
@@ -72,3 +72,11 @@ def mckeyinnards(mckeypos):
     mcvertbar = (mckeypos[0]+mckeypos[2]*7/16,mckeypos[1]+mckeypos[3]/8, mckeypos[2]/8, mckeypos[3]*5/8)
     mctopbox = (mckeypos[0]+mckeypos[2]*3/8,mckeypos[1]+mckeypos[3]/16, mckeypos[2]/4, mckeypos[3]/4)
     return ((mccirclex,mccircley),mccirclerad,mcvertbar,mctopbox)
+
+def demoalertpos(xres,yres):
+    xposl = xres/8
+    xposr = 3*xres/4+yres/64
+    ypos = 17*yres/64
+    xlen = xres/8-yres/64
+    ylen = 3*yres/32
+    return((xposl,ypos,xlen,ylen),(xposr,ypos,xlen,ylen))
