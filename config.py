@@ -66,15 +66,24 @@ gpiokey = 4
 
 #the list of words that will cycle through if left alone for 'demotime' amount of time (seconds)
 demowords = ["scouts","morse","code","dot","dash","history"]
-demotime = 3
+demotime = 30
 
 #the time (seconds) of the demo 'animations'
 dottodash = 0.25
 codetochar = 0.75
+chartocode = 2
 wordtodot = 4
 
 #type this word to make the program close
 exitword = "quit"
+
+escapetoclose = True
+
+#this is so the sound can be turned on and off, and have its volume adjusted. Mainly so i don't drive myself crazy with the sound of it during testing
+soundactive = False
+#the volume is any number between 0 (off) and 1 (maximum sound)
+soundvolume = (1)
+
 
 #DO NOT MODIFY ANYTHING BELOW THIS LINE.
 #below this line is checking that any modifications above this line aren't going to break anything.

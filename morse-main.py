@@ -91,6 +91,10 @@ def main():
     dotsound = pygame.mixer.Sound("dot.ogg")
     downsound = pygame.mixer.Sound("keydown.ogg")
 
+    dashsound.set_volume(soundvolume)
+    dotsound.set_volume(soundvolume)
+    downsound.set_volume(soundvolume)
+
     for pos in keysposresults[0]:
         mid = ((pos[0]+pos[2])/2,(pos[1]+pos[3])/2)
         pygame.draw.polygon(window, keytop, [(pos[0],pos[1]),(pos[2],pos[1]),mid])
@@ -226,6 +230,8 @@ def main():
             if (GPIO.input(gpiokey) == False and keydown == False):
                 keydown = True
                 start = time()
+                if soundactive:
+                    downsound.play(-1)
                 key = "KEY"
                 pygame.draw.rect(window, keyboardcol, mckeyposresults)
                 pygame.draw.rect(window, mckeytopbox, mckeycomponents[3])
@@ -236,6 +242,7 @@ def main():
                 keydown = False
                 key = ""
                 end = time()
+                downsound.stop()
                 pygame.draw.rect(window, keyboardcol, mckeyposresults)
                 pygame.draw.rect(window, mckeytopbox, mckeycomponents[3])
                 pygame.draw.rect(window, mckeyvertbar, mckeycomponents[2])
@@ -249,7 +256,10 @@ def main():
 
 
         for event in pygame.event.get():
-            if event.type == QUIT or event.type == KEYDOWN and event.key == K_ESCAPE:
+            if event.type == QUIT:
+                pygame.quit()
+                exit()
+            elif event.type == KEYDOWN and event.key == K_ESCAPE and escapetoclose:
                 pygame.quit()
                 exit()
                 #detecting the on-screen keyboard being clicked
@@ -749,7 +759,8 @@ def main():
                 #The space bar or on-screen key
             elif (event.type == KEYDOWN and event.key == K_SPACE) or (event.type == MOUSEBUTTONDOWN and event.button == 1 and sqrt(((event.pos[0]-mckeycomponents[0][0])**2)+((event.pos[1]-mckeycomponents[0][1])**2)) < mckeycomponents[1]):
                 start = time()
-                downsound.play(-1)
+                if soundactive:
+                    downsound.play(-1)
                 key = "KEY"
                 pygame.draw.rect(window, keyboardcol, mckeyposresults)
                 pygame.draw.rect(window, mckeytopbox, mckeycomponents[3])
@@ -846,28 +857,140 @@ def main():
             sleep(0.1)
             pygame.draw.rect(window, charstreambackgroundcol, morsestreamresults[1])
             pygame.display.update()
-        #go into demo mode (silently show words) if a set amount of inactive time has passed
+
+        #go into demo mode (silently type words) if a set amount of inactive time has passed
         if demoactive:
-            if keystring == "" and time() > end + demotime:
+            if keystring == "" and time() > end + demotime and key == "":
                 indemo = True
                 currentdemotime = time()
+                word = ""
                 demoword = demowords[randint(0,len(demowords)-1)].upper()
-                demochar = demoword[0]
-                demokey = reverse_lookup[demochar][0]
+                demokey = reverse_lookup[demoword[0]]
+                if len(demoword) > 1:
+                    demoword = demoword[1:]
+                else: demoword = ""
                 while indemo:
                     #allow the user to escape the demo
                     for event in pygame.event.get():
-                        if event.type == KEYDOWN or event.type == MOUSEBUTTONDOWN:
+                        if event.type == QUIT:
+                            pygame.quit()
+                            exit()
+                        elif event.type == KEYDOWN and event.key == K_ESCAPE and escapetoclose:
+                            pygame.quit()
+                            exit()
+                        elif event.type == KEYDOWN or event.type == MOUSEBUTTONDOWN:
                             indemo = False
+                            keystring = ""
+                            word = ""
+                            pygame.draw.rect(window, charstreambackgroundcol, morsestreamresults[1])
+                            pygame.draw.rect(window, charstreambackgroundcol, charstreamresults[1])
+                            pygame.display.update()
                         if event.type == QUIT:
                             pygame.quit()
                             exit()
                     if onapi:
                         if GPIO.input(gpiokey) == False:
                             indemo = False
+                            keystring = ""
+                            word = ""
+                            pygame.draw.rect(window, charstreambackgroundcol, morsestreamresults[1])
+                            pygame.draw.rect(window, charstreambackgroundcol, charstreamresults[1])
+                            pygame.display.update
 
                     if indemo:
-                        print(demoword,demochar,demokey)
+                        if time() > currentdemotime + dottodash and len(demokey) > 0:
+                            keystring += demokey[0]
+                            currentdemotime = time()
+                            if len(demokey) > 1:
+                                demokey = demokey[1:]
+                            else: demokey = ""
+                        if time() > currentdemotime + codetochar and len(demokey) == 0 and len(keystring) == 0 and len(demoword) > 0:
+                            demokey = reverse_lookup[demoword[0]]
+                            if len(demoword) > 1:
+                                demoword = demoword[1:]
+                            else: demoword = ""
+                        if time() > currentdemotime + wordtodot and len(demoword) == 0 and len(keystring) == 0:
+                            word = ""
+                            demoword = demowords[randint(0,len(demowords)-1)].upper()
+
+                        #copy and pasting the code that draws morse code to the screen
+                        if keystring != oldkeystring:
+                            pygame.draw.rect(window, charstreambackgroundcol, morsestreamresults[1])
+                            oldkeystring = keystring
+                            keylength = 0
+                            for character in keystring:
+                                if character == "-":
+                                    keylength += 2
+                                if character == ".":
+                                    keylength += 1
+                            testkeylength = keylength
+                            while testkeylength > 15:
+                                keystring = keystring[1:]
+                                keylength = 0
+                                for character in keystring:
+                                    if character == "-":
+                                        keylength += 2
+                                    if character == ".":
+                                        keylength += 1
+                                testkeylength = keylength
+                            startpos = dashstart - keylength * dashwidth
+                            for character in keystring:
+                                if character == ".":
+                                    pygame.draw.circle(window, morsewritecol, (int(startpos), int(morsestreamarea[1]+dashradius)), int(dashradius))
+                                    startpos += 2*dashwidth
+                                elif character == "-":
+                                    pygame.draw.circle(window, morsewritecol, (int(startpos), int(morsestreamarea[1]+dashradius)), int(dashradius))
+                                    pygame.draw.rect(window, morsewritecol, (int(startpos),int(morsestreamarea[1]),int(2*dashwidth),int(2*dashradius)))
+                                    pygame.draw.circle(window, morsewritecol, (int(startpos + 2 * dashwidth), int(morsestreamarea[1]+dashradius)), int(dashradius))
+                                    startpos += 4*dashwidth
+                            pygame.display.update()
+
+                        #copy and pasting the code that draws characters to the screen based on the dots and dashes
+                        if keystring != "" and len(demokey) == 0 and time() > currentdemotime + codetochar:
+                            char = getchar(keystring) if getchar(keystring) else ""
+                            if char != "Backspace" and char != "":
+                                word += char
+                                col = morsegoodcol
+                            elif char == "Backspace":
+                                if len(word) > 0:
+                                    word = word[:-1]
+                                col = morsegoodcol
+                            else:
+                                col = morsebadcol
+
+                            if word.lower() == exitword.lower():
+                                pygame.quit()
+                                exit()
+                            pygame.draw.rect(window, charstreambackgroundcol, morsestreamresults[1])
+                            oldkeystring = keystring
+                            keylength = 0
+                            for character in keystring:
+                                if character == "-":
+                                    keylength += 2
+                                if character == ".":
+                                    keylength += 1
+                            startpos = dashstart - keylength * dashwidth
+                            for character in keystring:
+                                if character == ".":
+                                    pygame.draw.circle(window, col, (int(startpos), int(morsestreamarea[1]+dashradius)), int(dashradius))
+                                    startpos += 2*dashwidth
+                                elif character == "-":
+                                    pygame.draw.circle(window, col, (int(startpos), int(morsestreamarea[1]+dashradius)), int(dashradius))
+                                    pygame.draw.rect(window, col, (int(startpos),int(morsestreamarea[1]),int(2*dashwidth),int(2*dashradius)))
+                                    pygame.draw.circle(window, col, (int(startpos + 2 * dashwidth), int(morsestreamarea[1]+dashradius)), int(dashradius))
+                                    startpos += 4*dashwidth
+                            theword = charstreamfont.render(word,True,charstreamtextcol)
+                            while theword.get_width()>charstreamresults[1][2]+20:
+                                word = word[1:]
+                                theword = charstreamfont.render(word,True,charstreamtextcol)
+                            pygame.draw.rect(window, charstreambackgroundcol, charstreamresults[1])
+                            window.blit(theword,(xres/2-theword.get_width()/2,(charstreamresults[0][1]+charstreamresults[0][1]+charstreamresults[0][3])/2-theword.get_height()/2))
+                            keystring = ""
+                            pygame.display.update()
+                            sleep(0.1)
+                            pygame.draw.rect(window, charstreambackgroundcol, morsestreamresults[1])
+                            pygame.display.update()
+                            currentdemotime = time()
 
                 start = time()
                 end = time()

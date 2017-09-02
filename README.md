@@ -15,6 +15,8 @@ Designed to run on a raspberry pi, unknown screen size so everything is just bas
 There's a word called `exitword` in 'config.py'. Type it to close the program.
 If you don't want it to be the default of `quit` (because people might type it accidentally), feel free to change it to something else.
 
+Hitting escape also closes the program if the `escapetoclose` value in 'config.py' is `True`. Set it to `False` (case sensitive) to disable
+
 ### Change the colours:
 All colours are represented in the 'config.py' file, inside parentheses with an rgb format, and look like this: `(126,255,0)` Each number represents the red, green, and blue values of a colour in that order, and can be any number in the range from 0 to 255 (inclusive).
 
