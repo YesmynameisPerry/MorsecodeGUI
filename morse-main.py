@@ -46,10 +46,10 @@ def main():
     root = tk.Tk()
     root.withdraw()
 
-    xres = int(root.winfo_screenwidth()/2)
+    xres = int(root.winfo_screenwidth()/1)
     #this next line is here because my screen isn't 16:9, but the final result probably will be
-    yres = int(xres*9.0/16.0)
-    #yres = int(root.winfo_screenheight()/2)
+    #yres = int(xres*9.0/16.0)
+    yres = int(root.winfo_screenheight()/1)
 
     if onapi:
         #set up the GPIO for the physical morse code key
@@ -60,7 +60,7 @@ def main():
     #set it all up
     pygame.mixer.pre_init(44100, -16, 1, 512)
     pygame.init()
-    window = pygame.display.set_mode((xres,yres))#,FULLSCREEN)
+    window = pygame.display.set_mode((xres,yres),FULLSCREEN)
     window.fill(backgroundcol)
     pygame.display.set_caption("Morse Code")
 
