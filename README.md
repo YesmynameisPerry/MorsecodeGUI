@@ -16,9 +16,11 @@ Designed to run on a raspberry pi, unknown screen size so everything is just bas
 ## Features still to add:
 - A clear button to remove all text from the screen
 - Playback to hear what you've typed
-- on screen notification that the system is in demomode
-- possibly a toggle to switch the keyboard out for a morse code cheat sheet
+- On screen notification that the system is in demomode
+- Possibly a toggle to switch the keyboard out for a morse code cheat sheet
 - Auto-update (a call to check this repo on start to check that it's the latest version)
+- Toggle to change from randomly choosing words for the demo to going through and repeating the list in order (if phrases are wanted instead of words)
+- Have an on screen way to mute the sounds
 
 ## How To:
 
