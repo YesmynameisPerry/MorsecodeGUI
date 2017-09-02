@@ -24,7 +24,8 @@ Designed to run on a raspberry pi, unknown screen size so everything is just bas
 
 ### Set up the physical morse code key to a Raspberry Pi:
 
-plug it in, wire it up, go go go
+plug it in, wire it up, go go go.
+
 Still writing this bit, check back later. Who knows maybe it'll have a fancy picture one day.
 
 ### Close the program:
