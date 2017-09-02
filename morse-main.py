@@ -47,6 +47,7 @@ def main():
     root.withdraw()
 
     xres = int(root.winfo_screenwidth()/2)
+    #this next line is here because my screen isn't 16:9, but the final result probably will be
     yres = int(xres*9.0/16.0)
     #yres = int(root.winfo_screenheight()/2)
 

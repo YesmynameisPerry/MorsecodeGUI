@@ -1,16 +1,31 @@
 # MorsecodeGUI
 a morse code gui made for a scout thing
 
-Designed to run on a raspberry pi, unknown screen size so everything is just based on fractions of the screen and an assumed standard aspect ratio.
+Designed to run on a raspberry pi, unknown screen size so everything is just based on fractions of the screen and an assumed standard aspect ratio of 16:9 (although it has been tested on everything from 1:1 (square) to 21:9(ultrawide))
+
+## Features currently in there:
+- On screen keyboard and morse code key
+- On screen visualisation of current morse code
+- Translation of code into english
+- Physical mouse/keyboard integration
+- Physical morse code key integration (on Raspberry Pi only)
+- Sound when the on screen, physical, or keyboard key is pressed
+- A demo mode that types out predetermined words after x amount of idle time
+- Error handling for both user modification of config.py and during runtime
 
 ## Features still to add:
 - A clear button to remove all text from the screen
 - Playback to hear what you've typed
 - on screen notification that the system is in demomode
-- possible toggle to switch the keyboard out for a morse code cheat sheet
+- possibly a toggle to switch the keyboard out for a morse code cheat sheet
 - Auto-update (a call to check this repo on start to check that it's the latest version)
 
 ## How To:
+
+### Set up the physical morse code key to a Raspberry Pi:
+
+plug it in, wire it up, go go go
+Still writing this bit, check back later. Who knows maybe it'll have a fancy picture one day.
 
 ### Close the program:
 There's a word called `exitword` in 'config.py'. Type it to close the program.

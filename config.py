@@ -65,8 +65,8 @@ mckeycircledark = (mckeycircle[0] - 10 if mckeycircle[0] - 10 > -1 else 0,
 gpiokey = 4
 
 #the list of words that will cycle through if left alone for 'demotime' amount of time (seconds)
-demowords = ["scouts","morse","code","dot","dash","history"]
-demotime = 30
+demowords = ["scouts","morse","code","dot","dash","history","joeys","cubs","venturers","rovers","leaders","baden","powell","brownsea"]
+demotime = 5
 
 #the time (seconds) of the demo 'animations'
 dottodash = 0.25
@@ -80,13 +80,18 @@ exitword = "quit"
 escapetoclose = True
 
 #this is so the sound can be turned on and off, and have its volume adjusted. Mainly so i don't drive myself crazy with the sound of it during testing
-soundactive = False
+soundactive = True
 #the volume is any number between 0 (off) and 1 (maximum sound)
 soundvolume = (1)
 
 
 #DO NOT MODIFY ANYTHING BELOW THIS LINE.
 #below this line is checking that any modifications above this line aren't going to break anything.
+
+#checking that all variables that need to exist still exist
+print("Don't forget to check that variables still exist")
+
+#checking all the values in the colours are within the acceptable ranges
 colourvars = [backgroundcol,keyboardcol,keycol,keytop,keysid,keysiddown,keybot,keytextcol,charstreamoutlinecol,charstreambackgroundcol,charstreamtextcol,morsewritecol,morsegoodcol,morsebadcol,mckeytopbox,mckeyvertbar,mckeycircle,mckeyvertbardark,mckeycircledark]
 colourvarnames = ["backgroundcol","keyboardcol","keycol","keytop","keysid","keysiddown","keybot","keytextcol","charstreamoutlinecol","charstreambackgroundcol","charstreamtextcol","morsewritecol","morsegoodcol","morsebadcol","mckeytopbox","mckeyvertbar","mckeycircle","mckeyvertbardark","mckeycircledark"]
 for rgbindex in range(len(colourvars)-1):
@@ -103,6 +108,7 @@ for rgbindex in range(len(colourvars)-1):
             raise ValueError("Invalid colour in config.py: The " + num + " value: '" + str(col) + "' in " + colourvarnames[rgbindex] + " is too high, the maximum value is 255")
         count += 1
 
+#turning on/off demomode if the list is empty
 if len(demowords) == 0:
     demoactive = False
 else: demoactive = True
