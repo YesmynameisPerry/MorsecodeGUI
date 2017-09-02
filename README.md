@@ -3,7 +3,9 @@ a morse code gui made for a scout thing
 
 Designed to run on a raspberry pi, unknown screen size so everything is just based on fractions of the screen and an assumed standard aspect ratio of 16:9 (although it has been tested on everything from 1:1 (square) to 21:9(ultrawide))
 
-(pictures of what it looks like when running are coming soon hold on tight it's gonna be a wild ride)
+Here's it running in demo mode (after having been left idle for x amount of time)
+
+![morsedemo](morsedemo.png)
 
 ## Features currently in there:
 - On screen keyboard and morse code key
