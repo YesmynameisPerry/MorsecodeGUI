@@ -5,8 +5,9 @@ Designed to run on a raspberry pi, unknown screen size so everything is just bas
 
 ## Features still to add:
 - A clear button to remove all text from the screen
-- A demo mode that displays random scouty words after x amount of inactive time
-- Sound
+- Playback to hear what you've typed
+- on screen notification that the system is in demomode
+- possible toggle to switch the keyboard out for a morse code cheat sheet
 - Auto-update (a call to check this repo on start to check that it's the latest version)
 
 ## How To:
