@@ -80,3 +80,19 @@ def demoalertpos(xres,yres):
     xlen = xres/8-yres/64
     ylen = 3*yres/32
     return((xposl,ypos,xlen,ylen),(xposr,ypos,xlen,ylen))
+
+def clearbuttonpos(xres,yres):
+    lefpos = 13*xres/32
+    toppos = 24*yres/64
+    rigpos = lefpos+3*xres/16
+    botpos = toppos+yres/8
+    lspot = (lefpos+yres/16,toppos+yres/16)
+    rspot = (rigpos-yres/16,toppos+yres/16)
+    innerbox = (lefpos+yres/64,toppos+yres/64,rigpos-lefpos-yres/32,botpos-toppos-yres/32)
+    return ((toppos,lefpos,botpos,rigpos),lspot,rspot,innerbox)
+
+def playpausepos(xres,yres):
+    return None
+
+def mutebuttonpos(xres,yres):
+    return None

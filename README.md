@@ -16,9 +16,9 @@ Here's it running in demo mode (after having been left idle for x amount of time
 - Sound when the on screen, physical, or keyboard key is pressed
 - A demo mode that types out predetermined words after x amount of idle time
 - Error handling for both user modification of config.py and during runtime
+- A clear button to remove all text from the screen
 
 ## Features still to add:
-- A clear button to remove all text from the screen
 - Playback to hear what you've typed
 - Possibly a toggle to switch the keyboard out for a morse code cheat sheet
 - Auto-update (a call to check this repo on start to check that it's the latest version)
