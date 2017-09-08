@@ -34,6 +34,24 @@ keybot = (keycol[0] - 20 if keycol[0] - 20 > -1 else 0,
 #the colour of the text on the keys of the keyboard
 keytextcol = (0,0,0)
 
+#the colour of the clear button
+clearcol = (200,200,200)
+#the key edge colours (based off keycol, don't modify unless you know what you're doing here)
+cleartop = (clearcol[0] + 10 if clearcol[0] + 10 < 256 else 255,
+          clearcol[1] + 10 if clearcol[1] + 10 < 256 else 255,
+          clearcol[2] + 10 if clearcol[2] + 10 < 256 else 255)
+clearsid = (clearcol[0] - 10 if clearcol[0] - 10 > -1 else 0,
+          clearcol[1] - 10 if clearcol[1] - 10 > -1 else 0,
+          clearcol[2] - 10 if clearcol[2] - 10 > -1 else 0)
+clearsiddown = (clearcol[0] - 15 if clearcol[0] - 15 > -1 else 0,
+              clearcol[1] - 15 if clearcol[1] - 15 > -1 else 0,
+              clearcol[2] - 15 if clearcol[2] - 15 > -1 else 0)
+clearbot = (clearcol[0] - 20 if clearcol[0] - 20 > -1 else 0,
+          clearcol[1] - 20 if clearcol[1] - 20 > -1 else 0,
+          clearcol[2] - 20 if clearcol[2] - 20 > -1 else 0)
+
+cleartextcol = (0,0,0)
+
 #the colour of the outline of the character stream
 charstreamoutlinecol = (150,150,150)
 
@@ -98,8 +116,8 @@ soundvolume = (1)
 print("Don't forget to check that variables still exist")
 
 #checking all the values in the colours are within the acceptable ranges
-colourvars = [backgroundcol,keyboardcol,keycol,keytop,keysid,keysiddown,keybot,keytextcol,charstreamoutlinecol,charstreambackgroundcol,charstreamtextcol,morsewritecol,morsegoodcol,morsebadcol,mckeytopbox,mckeyvertbar,mckeycircle,mckeyvertbardark,mckeycircledark]
-colourvarnames = ["backgroundcol","keyboardcol","keycol","keytop","keysid","keysiddown","keybot","keytextcol","charstreamoutlinecol","charstreambackgroundcol","charstreamtextcol","morsewritecol","morsegoodcol","morsebadcol","mckeytopbox","mckeyvertbar","mckeycircle","mckeyvertbardark","mckeycircledark"]
+colourvars = [clearcol,cleartop,clearsid,clearsiddown,cleartextcol,backgroundcol,keyboardcol,keycol,keytop,keysid,keysiddown,keybot,keytextcol,charstreamoutlinecol,charstreambackgroundcol,charstreamtextcol,morsewritecol,morsegoodcol,morsebadcol,mckeytopbox,mckeyvertbar,mckeycircle,mckeyvertbardark,mckeycircledark]
+colourvarnames = ["clearcol","cleartop","clearsid","clearsiddown","cleartextcol","backgroundcol","keyboardcol","keycol","keytop","keysid","keysiddown","keybot","keytextcol","charstreamoutlinecol","charstreambackgroundcol","charstreamtextcol","morsewritecol","morsegoodcol","morsebadcol","mckeytopbox","mckeyvertbar","mckeycircle","mckeyvertbardark","mckeycircledark"]
 for rgbindex in range(len(colourvars)-1):
     count = 1
     for col in colourvars[rgbindex]:

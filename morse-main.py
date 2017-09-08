@@ -46,7 +46,7 @@ def main():
     root = tk.Tk()
     root.withdraw()
 
-    xres = int(root.winfo_screenwidth()/2)
+    xres = int(root.winfo_screenwidth()/3)
     #this next line is here because my screen isn't 16:9, but the final result probably will be
     yres = int(xres*9.0/16.0)
     #yres = int(root.winfo_screenheight()/1)
@@ -88,11 +88,11 @@ def main():
     pygame.draw.rect(window, mckeytopbox, mckeycomponents[3])
     pygame.draw.rect(window, mckeyvertbar, mckeycomponents[2])
     pygame.draw.circle(window, mckeycircle, mckeycomponents[0], mckeycomponents[1])
-    pygame.draw.polygon(window, keytop, [(clearbuttonresults[0][1],clearbuttonresults[0][0]),clearbuttonresults[1],clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][0])])
-    pygame.draw.polygon(window, keysid, [(clearbuttonresults[0][1],clearbuttonresults[0][0]),clearbuttonresults[1],(clearbuttonresults[0][1],clearbuttonresults[0][2])])
-    pygame.draw.polygon(window, keysid, [clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][0]),(clearbuttonresults[0][3],clearbuttonresults[0][2])])
-    pygame.draw.polygon(window, keybot, [(clearbuttonresults[0][1],clearbuttonresults[0][2]),clearbuttonresults[1],clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][2])])
-    pygame.draw.rect(window,keycol,clearbuttonresults[3])
+    pygame.draw.polygon(window, cleartop, [(clearbuttonresults[0][1],clearbuttonresults[0][0]),clearbuttonresults[1],clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][0])])
+    pygame.draw.polygon(window, clearsid, [(clearbuttonresults[0][1],clearbuttonresults[0][0]),clearbuttonresults[1],(clearbuttonresults[0][1],clearbuttonresults[0][2])])
+    pygame.draw.polygon(window, clearsid, [clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][0]),(clearbuttonresults[0][3],clearbuttonresults[0][2])])
+    pygame.draw.polygon(window, clearbot, [(clearbuttonresults[0][1],clearbuttonresults[0][2]),clearbuttonresults[1],clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][2])])
+    pygame.draw.rect(window,clearcol,clearbuttonresults[3])
 
     #get the sound effects
     dashsound = pygame.mixer.Sound("dash.ogg")
@@ -172,7 +172,7 @@ def main():
     _0 = keyboardfont.render("0",True,keytextcol)
     BK = backspacefont.render("BK",True,keytextcol)
     demotext = demoalertfont.render("DEMO",True,demoalerttextcol)
-    cleartext = keyboardfont.render("CLEAR",True,keytextcol)
+    cleartext = keyboardfont.render("CLEAR",True,cleartextcol)
 
     #return ((toppos,lefpos,botpos,rigpos),lspot,rspot,innerbox)
     window.blit(cleartext,((clearbuttonresults[0][1]+clearbuttonresults[0][3])/2-cleartext.get_width()/2,(clearbuttonresults[0][0]+clearbuttonresults[0][2])/2-cleartext.get_height()/2))
@@ -281,22 +281,22 @@ def main():
                 word = ""
                 key = "CLEAR"
                 pygame.draw.rect(window, charstreambackgroundcol, charstreamresults[1])
-                pygame.draw.polygon(window, keybot, [(clearbuttonresults[0][1],clearbuttonresults[0][0]),clearbuttonresults[1],clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][0])])
-                pygame.draw.polygon(window, keysiddown, [(clearbuttonresults[0][1],clearbuttonresults[0][0]),clearbuttonresults[1],(clearbuttonresults[0][1],clearbuttonresults[0][2])])
-                pygame.draw.polygon(window, keysiddown, [clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][0]),(clearbuttonresults[0][3],clearbuttonresults[0][2])])
-                pygame.draw.polygon(window, keytop, [(clearbuttonresults[0][1],clearbuttonresults[0][2]),clearbuttonresults[1],clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][2])])
-                pygame.draw.rect(window,keysid,clearbuttonresults[3])
+                pygame.draw.polygon(window, clearbot, [(clearbuttonresults[0][1],clearbuttonresults[0][0]),clearbuttonresults[1],clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][0])])
+                pygame.draw.polygon(window, clearsiddown, [(clearbuttonresults[0][1],clearbuttonresults[0][0]),clearbuttonresults[1],(clearbuttonresults[0][1],clearbuttonresults[0][2])])
+                pygame.draw.polygon(window, clearsiddown, [clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][0]),(clearbuttonresults[0][3],clearbuttonresults[0][2])])
+                pygame.draw.polygon(window, cleartop, [(clearbuttonresults[0][1],clearbuttonresults[0][2]),clearbuttonresults[1],clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][2])])
+                pygame.draw.rect(window,clearsid,clearbuttonresults[3])
                 window.blit(cleartext,((clearbuttonresults[0][1]+clearbuttonresults[0][3])/2-cleartext.get_width()/2,2+(clearbuttonresults[0][0]+clearbuttonresults[0][2])/2-cleartext.get_height()/2))
                 pygame.display.update()
 
             elif event.type == MOUSEBUTTONUP and event.button == 1 and key == "CLEAR":
                 key = ""
                 pygame.draw.rect(window, charstreambackgroundcol, charstreamresults[1])
-                pygame.draw.polygon(window, keytop, [(clearbuttonresults[0][1],clearbuttonresults[0][0]),clearbuttonresults[1],clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][0])])
-                pygame.draw.polygon(window, keysid, [(clearbuttonresults[0][1],clearbuttonresults[0][0]),clearbuttonresults[1],(clearbuttonresults[0][1],clearbuttonresults[0][2])])
-                pygame.draw.polygon(window, keysid, [clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][0]),(clearbuttonresults[0][3],clearbuttonresults[0][2])])
-                pygame.draw.polygon(window, keybot, [(clearbuttonresults[0][1],clearbuttonresults[0][2]),clearbuttonresults[1],clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][2])])
-                pygame.draw.rect(window,keycol,clearbuttonresults[3])
+                pygame.draw.polygon(window, cleartop, [(clearbuttonresults[0][1],clearbuttonresults[0][0]),clearbuttonresults[1],clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][0])])
+                pygame.draw.polygon(window, clearsid, [(clearbuttonresults[0][1],clearbuttonresults[0][0]),clearbuttonresults[1],(clearbuttonresults[0][1],clearbuttonresults[0][2])])
+                pygame.draw.polygon(window, clearsid, [clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][0]),(clearbuttonresults[0][3],clearbuttonresults[0][2])])
+                pygame.draw.polygon(window, clearbot, [(clearbuttonresults[0][1],clearbuttonresults[0][2]),clearbuttonresults[1],clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][2])])
+                pygame.draw.rect(window,clearcol,clearbuttonresults[3])
                 window.blit(cleartext,((clearbuttonresults[0][1]+clearbuttonresults[0][3])/2-cleartext.get_width()/2,(clearbuttonresults[0][0]+clearbuttonresults[0][2])/2-cleartext.get_height()/2))
                 pygame.display.update()
                 #detecting the on-screen keyboard being clicked
