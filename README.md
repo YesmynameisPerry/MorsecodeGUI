@@ -1,7 +1,7 @@
 # MorsecodeGUI
 a morse code gui made for a scout thing
 
-Designed to run on a raspberry pi, unknown screen size so everything is just based on fractions of the screen and an assumed standard aspect ratio of 16:9 (although it has been tested on everything from 1:1 (square) to 21:9(ultrawide))
+Designed to run on a raspberry pi, unknown screen size so everything is just based on fractions of the screen and an assumed standard aspect ratio of 16:9 (although it has been tested on everything from 3:4(standard, looks a little dodgy) to 21:9(ultrawide))
 
 Here's it running in demo mode (after having been left idle for x amount of time)
 
