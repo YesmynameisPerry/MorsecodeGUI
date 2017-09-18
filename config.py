@@ -36,7 +36,8 @@ keytextcol = (0,0,0)
 
 #the colour of the clear button
 clearcol = (200,200,200)
-#the key edge colours (based off keycol, don't modify unless you know what you're doing here)
+
+#the colour button edge colours (based off clearcol, don't modify unless you know what you're doing here)
 cleartop = (clearcol[0] + 10 if clearcol[0] + 10 < 256 else 255,
           clearcol[1] + 10 if clearcol[1] + 10 < 256 else 255,
           clearcol[2] + 10 if clearcol[2] + 10 < 256 else 255)
@@ -50,7 +51,49 @@ clearbot = (clearcol[0] - 20 if clearcol[0] - 20 > -1 else 0,
           clearcol[1] - 20 if clearcol[1] - 20 > -1 else 0,
           clearcol[2] - 20 if clearcol[2] - 20 > -1 else 0)
 
+#the colour of the text on the clear button
 cleartextcol = (0,0,0)
+
+#the colour of the mute button
+mutecol = (200,200,200)
+
+#the mute button edge colours (based off mutecol, don't modify unless you know what you're doing here)
+mutetop = (mutecol[0] + 10 if mutecol[0] + 10 < 256 else 255,
+          mutecol[1] + 10 if mutecol[1] + 10 < 256 else 255,
+          mutecol[2] + 10 if mutecol[2] + 10 < 256 else 255)
+mutesid = (mutecol[0] - 10 if mutecol[0] - 10 > -1 else 0,
+          mutecol[1] - 10 if mutecol[1] - 10 > -1 else 0,
+          mutecol[2] - 10 if mutecol[2] - 10 > -1 else 0)
+mutesiddown = (mutecol[0] - 15 if mutecol[0] - 15 > -1 else 0,
+              mutecol[1] - 15 if mutecol[1] - 15 > -1 else 0,
+              mutecol[2] - 15 if mutecol[2] - 15 > -1 else 0)
+mutebot = (mutecol[0] - 20 if mutecol[0] - 20 > -1 else 0,
+          mutecol[1] - 20 if mutecol[1] - 20 > -1 else 0,
+          mutecol[2] - 20 if mutecol[2] - 20 > -1 else 0)
+
+#the colour of the images on the mute button
+muteimage1col = (0,0,0)
+muteimage2col = (255,0,0)
+
+#the colour of the play/pause button
+playpausecol = (200,200,200)
+
+#the play/pause button edge colours (based off playpausecol, don't modify unless you know what you're doing here)
+playpausetop = (playpausecol[0] + 10 if playpausecol[0] + 10 < 256 else 255,
+          playpausecol[1] + 10 if playpausecol[1] + 10 < 256 else 255,
+          playpausecol[2] + 10 if playpausecol[2] + 10 < 256 else 255)
+playpausesid = (playpausecol[0] - 10 if playpausecol[0] - 10 > -1 else 0,
+          playpausecol[1] - 10 if playpausecol[1] - 10 > -1 else 0,
+          playpausecol[2] - 10 if playpausecol[2] - 10 > -1 else 0)
+playpausesiddown = (playpausecol[0] - 15 if playpausecol[0] - 15 > -1 else 0,
+              playpausecol[1] - 15 if playpausecol[1] - 15 > -1 else 0,
+              playpausecol[2] - 15 if playpausecol[2] - 15 > -1 else 0)
+playpausebot = (playpausecol[0] - 20 if playpausecol[0] - 20 > -1 else 0,
+          playpausecol[1] - 20 if playpausecol[1] - 20 > -1 else 0,
+          playpausecol[2] - 20 if playpausecol[2] - 20 > -1 else 0)
+
+#the colour of the image on the play/pause button
+playpauseimagecol = (0,0,0)
 
 #the colour of the outline of the character stream
 charstreamoutlinecol = (150,150,150)
@@ -84,7 +127,7 @@ gpiokey = 4
 
 #the list of words that will cycle through if left alone for 'demotime' amount of time (seconds)
 demowords = ["scouts","morse","code","dot","dash","history","joeys","cubs","venturers","rovers","leaders","baden","powell","brownsea"]
-demotime = 10
+demotime = 4
 
 demoalertbackgroundcol = (100,100,100)
 demoalerttextcol = (255,50,50)
@@ -105,8 +148,8 @@ escapetoclose = True
 
 #this is so the sound can be turned on and off, and have its volume adjusted. Mainly so i don't drive myself crazy with the sound of it during testing
 soundactive = True
-#the volume is any number between 0 (off) and 1 (maximum sound)
-soundvolume = (1)
+#the maximum volume is any number greater than 0 (off) and  less than or equal to 1 (maximum sound)
+maxsoundvolume = (1)
 
 
 #DO NOT MODIFY ANYTHING BELOW THIS LINE.

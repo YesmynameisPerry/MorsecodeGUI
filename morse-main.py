@@ -46,10 +46,10 @@ def main():
     root = tk.Tk()
     root.withdraw()
 
-    xres = int(root.winfo_screenwidth()/3)
+    xres = int(root.winfo_screenwidth()/2)
     #this next line is here because my screen isn't 16:9, but the final result probably will be
     yres = int(xres*9.0/16.0)
-    #yres = int(root.winfo_screenheight()/1)
+    #yres = int(root.winfo_screenheight()/2)
 
     if onapi:
         #set up the GPIO for the physical morse code key
@@ -77,6 +77,8 @@ def main():
     mckeycomponents = mckeyinnards(mckeyposresults)
     demoalertresults = demoalertpos(xres,yres)
     clearbuttonresults = clearbuttonpos(xres,yres)
+    playpauseresults = playpausepos(xres,yres)
+    mutebuttonresults = mutebuttonpos(xres,yres)
 
     #draw the various components
     pygame.draw.rect(window, keyboardcol, keyboardposresults)
@@ -92,16 +94,26 @@ def main():
     pygame.draw.polygon(window, clearsid, [(clearbuttonresults[0][1],clearbuttonresults[0][0]),clearbuttonresults[1],(clearbuttonresults[0][1],clearbuttonresults[0][2])])
     pygame.draw.polygon(window, clearsid, [clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][0]),(clearbuttonresults[0][3],clearbuttonresults[0][2])])
     pygame.draw.polygon(window, clearbot, [(clearbuttonresults[0][1],clearbuttonresults[0][2]),clearbuttonresults[1],clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][2])])
-    pygame.draw.rect(window,clearcol,clearbuttonresults[3])
+    pygame.draw.rect(window, clearcol, clearbuttonresults[3])
+    pygame.draw.polygon(window, playpausetop, [(playpauseresults[0][0],playpauseresults[0][1]),(playpauseresults[0][2],playpauseresults[0][1]),playpauseresults[1]])
+    pygame.draw.polygon(window, playpausesid, [(playpauseresults[0][0],playpauseresults[0][1]),(playpauseresults[0][0],playpauseresults[0][3]),playpauseresults[1]])
+    pygame.draw.polygon(window, playpausesid, [(playpauseresults[0][2],playpauseresults[0][1]),(playpauseresults[0][2],playpauseresults[0][3]),playpauseresults[1]])
+    pygame.draw.polygon(window, playpausebot, [(playpauseresults[0][0],playpauseresults[0][3]),(playpauseresults[0][2],playpauseresults[0][3]),playpauseresults[1]])
+    pygame.draw.rect(window, playpausecol, playpauseresults[2])
+    pygame.draw.polygon(window, mutetop, [(mutebuttonresults[0][0],mutebuttonresults[0][1]),(mutebuttonresults[0][2],mutebuttonresults[0][1]),mutebuttonresults[1]])
+    pygame.draw.polygon(window, mutesid, [(mutebuttonresults[0][0],mutebuttonresults[0][1]),(mutebuttonresults[0][0],mutebuttonresults[0][3]),mutebuttonresults[1]])
+    pygame.draw.polygon(window, mutesid, [(mutebuttonresults[0][2],mutebuttonresults[0][1]),(mutebuttonresults[0][2],mutebuttonresults[0][3]),mutebuttonresults[1]])
+    pygame.draw.polygon(window, mutebot, [(mutebuttonresults[0][0],mutebuttonresults[0][3]),(mutebuttonresults[0][2],mutebuttonresults[0][3]),mutebuttonresults[1]])
+    pygame.draw.rect(window, mutecol, mutebuttonresults[2])
 
     #get the sound effects
     dashsound = pygame.mixer.Sound("dash.ogg")
     dotsound = pygame.mixer.Sound("dot.ogg")
     downsound = pygame.mixer.Sound("keydown.ogg")
 
-    dashsound.set_volume(soundvolume)
-    dotsound.set_volume(soundvolume)
-    downsound.set_volume(soundvolume)
+    dashsound.set_volume(maxsoundvolume)
+    dotsound.set_volume(maxsoundvolume)
+    downsound.set_volume(maxsoundvolume)
 
     for pos in keysposresults[0]:
         mid = ((pos[0]+pos[2])/2,(pos[1]+pos[3])/2)
@@ -172,7 +184,7 @@ def main():
     _0 = keyboardfont.render("0",True,keytextcol)
     BK = backspacefont.render("BK",True,keytextcol)
     demotext = demoalertfont.render("DEMO",True,demoalerttextcol)
-    cleartext = keyboardfont.render("CLEAR",True,cleartextcol)
+    cleartext = demoalertfont.render("CLEAR",True,cleartextcol)
 
     #return ((toppos,lefpos,botpos,rigpos),lspot,rspot,innerbox)
     window.blit(cleartext,((clearbuttonresults[0][1]+clearbuttonresults[0][3])/2-cleartext.get_width()/2,(clearbuttonresults[0][0]+clearbuttonresults[0][2])/2-cleartext.get_height()/2))
@@ -276,9 +288,47 @@ def main():
             elif event.type == KEYDOWN and event.key == K_ESCAPE and escapetoclose:
                 pygame.quit()
                 exit()
+
+                #detecting if the mute button has been hit
+            elif event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > mutebuttonresults[0][0] and event.pos[0] < mutebuttonresults[0][2] and event.pos[1] > mutebuttonresults[0][1] and event.pos[1] < mutebuttonresults[0][3]:
+                key = "MUTE"
+                pygame.draw.polygon(window, mutebot, [(mutebuttonresults[0][0],mutebuttonresults[0][1]),(mutebuttonresults[0][2],mutebuttonresults[0][1]),mutebuttonresults[1]])
+                pygame.draw.polygon(window, mutesiddown, [(mutebuttonresults[0][0],mutebuttonresults[0][1]),(mutebuttonresults[0][0],mutebuttonresults[0][3]),mutebuttonresults[1]])
+                pygame.draw.polygon(window, mutesiddown, [(mutebuttonresults[0][2],mutebuttonresults[0][1]),(mutebuttonresults[0][2],mutebuttonresults[0][3]),mutebuttonresults[1]])
+                pygame.draw.polygon(window, mutetop, [(mutebuttonresults[0][0],mutebuttonresults[0][3]),(mutebuttonresults[0][2],mutebuttonresults[0][3]),mutebuttonresults[1]])
+                pygame.draw.rect(window, mutesid, mutebuttonresults[2])
+                pygame.display.update()
+            elif event.type == MOUSEBUTTONUP and event.button == 1 and key == "MUTE":
+                pygame.draw.polygon(window, mutetop, [(mutebuttonresults[0][0],mutebuttonresults[0][1]),(mutebuttonresults[0][2],mutebuttonresults[0][1]),mutebuttonresults[1]])
+                pygame.draw.polygon(window, mutesid, [(mutebuttonresults[0][0],mutebuttonresults[0][1]),(mutebuttonresults[0][0],mutebuttonresults[0][3]),mutebuttonresults[1]])
+                pygame.draw.polygon(window, mutesid, [(mutebuttonresults[0][2],mutebuttonresults[0][1]),(mutebuttonresults[0][2],mutebuttonresults[0][3]),mutebuttonresults[1]])
+                pygame.draw.polygon(window, mutebot, [(mutebuttonresults[0][0],mutebuttonresults[0][3]),(mutebuttonresults[0][2],mutebuttonresults[0][3]),mutebuttonresults[1]])
+                pygame.draw.rect(window, mutecol, mutebuttonresults[2])
+                pygame.display.update()
+                end = time()
+
+                #detecting if the play/pause button has been hit
+            elif event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > playpauseresults[0][0] and event.pos[0] < playpauseresults[0][2] and event.pos[1] > playpauseresults[0][1] and event.pos[1] < playpauseresults[0][3]:
+                key = "PLAYPAUSE"
+                pygame.draw.polygon(window, playpausebot, [(playpauseresults[0][0],playpauseresults[0][1]),(playpauseresults[0][2],playpauseresults[0][1]),playpauseresults[1]])
+                pygame.draw.polygon(window, playpausesiddown, [(playpauseresults[0][0],playpauseresults[0][1]),(playpauseresults[0][0],playpauseresults[0][3]),playpauseresults[1]])
+                pygame.draw.polygon(window, playpausesiddown, [(playpauseresults[0][2],playpauseresults[0][1]),(playpauseresults[0][2],playpauseresults[0][3]),playpauseresults[1]])
+                pygame.draw.polygon(window, playpausetop, [(playpauseresults[0][0],playpauseresults[0][3]),(playpauseresults[0][2],playpauseresults[0][3]),playpauseresults[1]])
+                pygame.draw.rect(window, playpausesid, playpauseresults[2])
+                pygame.display.update()
+            elif event.type == MOUSEBUTTONUP and event.button == 1 and key == "PLAYPAUSE":
+                pygame.draw.polygon(window, playpausetop, [(playpauseresults[0][0],playpauseresults[0][1]),(playpauseresults[0][2],playpauseresults[0][1]),playpauseresults[1]])
+                pygame.draw.polygon(window, playpausesid, [(playpauseresults[0][0],playpauseresults[0][1]),(playpauseresults[0][0],playpauseresults[0][3]),playpauseresults[1]])
+                pygame.draw.polygon(window, playpausesid, [(playpauseresults[0][2],playpauseresults[0][1]),(playpauseresults[0][2],playpauseresults[0][3]),playpauseresults[1]])
+                pygame.draw.polygon(window, playpausebot, [(playpauseresults[0][0],playpauseresults[0][3]),(playpauseresults[0][2],playpauseresults[0][3]),playpauseresults[1]])
+                pygame.draw.rect(window, playpausecol, playpauseresults[2])
+                pygame.display.update()
+                end = time()
+
                 #detecting if the clear button has been hit
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > clearbuttonresults[0][1] and event.pos[0] < clearbuttonresults[0][3] and event.pos[1] > clearbuttonresults[0][0] and event.pos[1] < clearbuttonresults[0][2]):
                 word = ""
+                keystring = ""
                 key = "CLEAR"
                 pygame.draw.rect(window, charstreambackgroundcol, charstreamresults[1])
                 pygame.draw.polygon(window, clearbot, [(clearbuttonresults[0][1],clearbuttonresults[0][0]),clearbuttonresults[1],clearbuttonresults[2],(clearbuttonresults[0][3],clearbuttonresults[0][0])])
@@ -288,6 +338,7 @@ def main():
                 pygame.draw.rect(window,clearsid,clearbuttonresults[3])
                 window.blit(cleartext,((clearbuttonresults[0][1]+clearbuttonresults[0][3])/2-cleartext.get_width()/2,2+(clearbuttonresults[0][0]+clearbuttonresults[0][2])/2-cleartext.get_height()/2))
                 pygame.display.update()
+                end = time()
 
             elif event.type == MOUSEBUTTONUP and event.button == 1 and key == "CLEAR":
                 key = ""
@@ -850,7 +901,7 @@ def main():
                     startpos += 4*dashwidth
             pygame.display.update()
 
-        if keystring != "" and time() - end > letterdelaytime:
+        if keystring != "" and time() - end > letterdelaytime and key == "":
             char = getchar(keystring) if getchar(keystring) else ""
             if char != "Backspace" and char != "":
                 word += char

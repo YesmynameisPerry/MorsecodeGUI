@@ -73,6 +73,7 @@ def mckeyinnards(mckeypos):
     mctopbox = (mckeypos[0]+mckeypos[2]*3/8,mckeypos[1]+mckeypos[3]/16, mckeypos[2]/4, mckeypos[3]/4)
     return ((mccirclex,mccircley),mccirclerad,mcvertbar,mctopbox)
 
+#where the demo alerts appear
 def demoalertpos(xres,yres):
     xposl = xres/8
     xposr = 3*xres/4+yres/64
@@ -81,18 +82,33 @@ def demoalertpos(xres,yres):
     ylen = 3*yres/32
     return((xposl,ypos,xlen,ylen),(xposr,ypos,xlen,ylen))
 
+#where the clear button appears
 def clearbuttonpos(xres,yres):
     lefpos = 13*xres/32
-    toppos = 24*yres/64
+    toppos = 3*yres/8
     rigpos = lefpos+3*xres/16
-    botpos = toppos+yres/8
+    botpos = yres/2
     lspot = (lefpos+yres/16,toppos+yres/16)
     rspot = (rigpos-yres/16,toppos+yres/16)
     innerbox = (lefpos+yres/64,toppos+yres/64,rigpos-lefpos-yres/32,botpos-toppos-yres/32)
     return ((toppos,lefpos,botpos,rigpos),lspot,rspot,innerbox)
 
+#where the play/pause button appears
 def playpausepos(xres,yres):
-    return None
+    lefpos = 19*xres/32+yres/64
+    rigpos = lefpos + yres/8
+    toppos = 3*yres/8
+    botpos = yres/2
+    mid = ((lefpos+rigpos)/2,(toppos+botpos)/2)
+    innerbox = (lefpos+yres/64,toppos+yres/64,rigpos-lefpos-yres/32,botpos-toppos-yres/32)
+    return ((lefpos,toppos,rigpos,botpos),mid,innerbox)
 
+#where the mute button appears
 def mutebuttonpos(xres,yres):
-    return None
+    lefpos = 13/32*xres-9/64*yres
+    rigpos = lefpos + yres/8
+    toppos = 3*yres/8
+    botpos = yres/2
+    mid = ((lefpos+rigpos)/2,(toppos+botpos)/2)
+    innerbox = (lefpos+yres/64,toppos+yres/64,rigpos-lefpos-yres/32,botpos-toppos-yres/32)
+    return ((lefpos,toppos,rigpos,botpos),mid,innerbox)
