@@ -1,9 +1,11 @@
 # MorsecodeGUI
 a morse code gui made for a scout thing
 
-Designed to run on a raspberry pi, unknown screen size so everything is just based on fractions of the screen and an assumed standard aspect ratio of 16:9 (although it has been tested on everything from 3:4(standard, looks a little dodgy) to 21:9(ultrawide))
+Designed to run on a raspberry pi, unknown screen size so everything is just based on fractions of the screen and an assumed standard aspect ratio of 16:9 (although it has been tested on everything from 3:4(standard, looks a little dodgy) to 21:9 (ultrawide))
 
 Here's it running in demo mode (after having been left idle for x amount of time)
+
+(the blank button right of the 'clear' button will be a playback button later on)
 
 ![morsedemo](morsedemo.png)
 
@@ -24,6 +26,10 @@ Here's it running in demo mode (after having been left idle for x amount of time
 - Auto-update (a call to check this repo on start to check that it's the latest version)
 
 ## How To:
+
+### Run the program:
+
+Start 'morse-main.py' with your favourite way of running python 3. It'll tell you if it's missing any libraries. It shouldn't be missing anything if it's running on Raspbian, on a Raspberry Pi.
 
 ### Set up the physical morse code key to a Raspberry Pi:
 
