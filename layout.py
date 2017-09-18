@@ -109,6 +109,11 @@ def mutebuttonpos(xres,yres):
     rigpos = lefpos + yres/8
     toppos = 3*yres/8
     botpos = yres/2
-    mid = ((lefpos+rigpos)/2,(toppos+botpos)/2)
+    mid = (int((lefpos+rigpos)/2),int((toppos+botpos)/2))
     innerbox = (lefpos+yres/64,toppos+yres/64,rigpos-lefpos-yres/32,botpos-toppos-yres/32)
-    return ((lefpos,toppos,rigpos,botpos),mid,innerbox)
+    size1 = int(yres/64)
+    size2 = int(yres/32)
+    size3 = int(yres/25)
+    size4 = int(yres/100)
+    size5 = int(yres/40)
+    return ((lefpos,toppos,rigpos,botpos),mid,innerbox,size1,size2,size3,size4,size5)

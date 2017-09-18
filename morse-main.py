@@ -105,6 +105,10 @@ def main():
     pygame.draw.polygon(window, mutesid, [(mutebuttonresults[0][2],mutebuttonresults[0][1]),(mutebuttonresults[0][2],mutebuttonresults[0][3]),mutebuttonresults[1]])
     pygame.draw.polygon(window, mutebot, [(mutebuttonresults[0][0],mutebuttonresults[0][3]),(mutebuttonresults[0][2],mutebuttonresults[0][3]),mutebuttonresults[1]])
     pygame.draw.rect(window, mutecol, mutebuttonresults[2])
+    pygame.draw.rect(window, muteimage1col, (mutebuttonresults[1][0]-mutebuttonresults[3]-mutebuttonresults[3]/3,mutebuttonresults[1][1]-mutebuttonresults[3],mutebuttonresults[4],mutebuttonresults[4]))
+    pygame.draw.polygon(window, muteimage1col, [(mutebuttonresults[1][0]-mutebuttonresults[3]/2,mutebuttonresults[1][1]),
+                                                (mutebuttonresults[1][0]+mutebuttonresults[4]-mutebuttonresults[3]/2,mutebuttonresults[1][1]-mutebuttonresults[4]),
+                                                (mutebuttonresults[1][0]+mutebuttonresults[4]-mutebuttonresults[3]/2,mutebuttonresults[1][1]+mutebuttonresults[4])])
 
     #get the sound effects
     dashsound = pygame.mixer.Sound("dash.ogg")
@@ -114,6 +118,8 @@ def main():
     dashsound.set_volume(maxsoundvolume)
     dotsound.set_volume(maxsoundvolume)
     downsound.set_volume(maxsoundvolume)
+
+    muted = False
 
     for pos in keysposresults[0]:
         mid = ((pos[0]+pos[2])/2,(pos[1]+pos[3])/2)
@@ -297,6 +303,14 @@ def main():
                 pygame.draw.polygon(window, mutesiddown, [(mutebuttonresults[0][2],mutebuttonresults[0][1]),(mutebuttonresults[0][2],mutebuttonresults[0][3]),mutebuttonresults[1]])
                 pygame.draw.polygon(window, mutetop, [(mutebuttonresults[0][0],mutebuttonresults[0][3]),(mutebuttonresults[0][2],mutebuttonresults[0][3]),mutebuttonresults[1]])
                 pygame.draw.rect(window, mutesid, mutebuttonresults[2])
+                pygame.draw.rect(window, muteimage1col, (mutebuttonresults[1][0]-mutebuttonresults[3]-mutebuttonresults[3]/3,2+mutebuttonresults[1][1]-mutebuttonresults[3],mutebuttonresults[4],mutebuttonresults[4]))
+                pygame.draw.polygon(window, muteimage1col, [(mutebuttonresults[1][0]-mutebuttonresults[3]/2,2+mutebuttonresults[1][1]),
+                                                            (mutebuttonresults[1][0]+mutebuttonresults[4]-mutebuttonresults[3]/2,2+mutebuttonresults[1][1]-mutebuttonresults[4]),
+                                                            (mutebuttonresults[1][0]+mutebuttonresults[4]-mutebuttonresults[3]/2,2+mutebuttonresults[1][1]+mutebuttonresults[4])])
+                if muted:
+                    pygame.draw.circle(window, muteimage2col, (mutebuttonresults[1][0],2+mutebuttonresults[1][1]), mutebuttonresults[5], mutebuttonresults[6])
+                    pygame.draw.line(window, muteimage2col, (mutebuttonresults[1][0]+mutebuttonresults[7],2+mutebuttonresults[1][1]-mutebuttonresults[7]),(mutebuttonresults[1][0]-mutebuttonresults[7],2+mutebuttonresults[1][1]+mutebuttonresults[7]),mutebuttonresults[6])
+
                 pygame.display.update()
             elif event.type == MOUSEBUTTONUP and event.button == 1 and key == "MUTE":
                 pygame.draw.polygon(window, mutetop, [(mutebuttonresults[0][0],mutebuttonresults[0][1]),(mutebuttonresults[0][2],mutebuttonresults[0][1]),mutebuttonresults[1]])
@@ -304,6 +318,22 @@ def main():
                 pygame.draw.polygon(window, mutesid, [(mutebuttonresults[0][2],mutebuttonresults[0][1]),(mutebuttonresults[0][2],mutebuttonresults[0][3]),mutebuttonresults[1]])
                 pygame.draw.polygon(window, mutebot, [(mutebuttonresults[0][0],mutebuttonresults[0][3]),(mutebuttonresults[0][2],mutebuttonresults[0][3]),mutebuttonresults[1]])
                 pygame.draw.rect(window, mutecol, mutebuttonresults[2])
+                pygame.draw.rect(window, muteimage1col, (mutebuttonresults[1][0]-mutebuttonresults[3]-mutebuttonresults[3]/3,mutebuttonresults[1][1]-mutebuttonresults[3],mutebuttonresults[4],mutebuttonresults[4]))
+                pygame.draw.polygon(window, muteimage1col, [(mutebuttonresults[1][0]-mutebuttonresults[3]/2,mutebuttonresults[1][1]),
+                                                            (mutebuttonresults[1][0]+mutebuttonresults[4]-mutebuttonresults[3]/2,mutebuttonresults[1][1]-mutebuttonresults[4]),
+                                                            (mutebuttonresults[1][0]+mutebuttonresults[4]-mutebuttonresults[3]/2,mutebuttonresults[1][1]+mutebuttonresults[4])])
+                if muted:
+                    muted = False
+                    dashsound.set_volume(maxsoundvolume)
+                    dotsound.set_volume(maxsoundvolume)
+                    downsound.set_volume(maxsoundvolume)
+                else:
+                    muted = True
+                    pygame.draw.circle(window, muteimage2col, mutebuttonresults[1], mutebuttonresults[5], mutebuttonresults[6])
+                    pygame.draw.line(window, muteimage2col, (mutebuttonresults[1][0]+mutebuttonresults[7],mutebuttonresults[1][1]-mutebuttonresults[7]),(mutebuttonresults[1][0]-mutebuttonresults[7],mutebuttonresults[1][1]+mutebuttonresults[7]),mutebuttonresults[6])
+                    dashsound.set_volume(0)
+                    dotsound.set_volume(0)
+                    downsound.set_volume(0)
                 pygame.display.update()
                 end = time()
 
