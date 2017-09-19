@@ -63,6 +63,7 @@ def main():
     window = pygame.display.set_mode((xres,yres))#,FULLSCREEN)
     window.fill(backgroundcol)
     pygame.display.set_caption("Morse Code")
+    playbackchannel = pygame.mixer.Channel(0)
 
     #get the position results from the layout file
     keyboardposresults = keyboardpos(xres,yres)

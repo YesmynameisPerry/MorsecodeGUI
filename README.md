@@ -33,9 +33,11 @@ Start 'morse-main.py' with your favourite way of running python 3. It'll tell yo
 
 ### Set up the physical morse code key to a Raspberry Pi:
 
-plug it in, wire it up, go go go.
+Two resistors and a few wires will be needed to connect the morse code key to the Raspberry Pi. By default the program is expecting the key to be plugged into a specific pin, although if you know what you're doing feel free to change `gpiokey` to your liking. The wiring goes a little like this:
 
-Still writing this bit, check back later. Who knows maybe it'll have a fancy picture one day.
+![raspberrywiring](raspberrywiring.png)
+
+If you know how to deal with circuit diagrams drawn in paint then yay you're all set. If you're not then go and get an adult to help you set things up. In case you can't tell the key is represented by the switch in the diagram. 
 
 ### Close the program:
 There's a word called `exitword` in 'config.py'. Type it to close the program.
