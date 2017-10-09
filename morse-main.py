@@ -10,7 +10,6 @@ try:
     from layout import *
     from math import floor,sqrt
     from random import randint
-
 #if a library is missing
 except ImportError as e:
     try:
@@ -101,6 +100,9 @@ def main():
     pygame.draw.polygon(window, playpausesid, [(playpauseresults[0][2],playpauseresults[0][1]),(playpauseresults[0][2],playpauseresults[0][3]),playpauseresults[1]])
     pygame.draw.polygon(window, playpausebot, [(playpauseresults[0][0],playpauseresults[0][3]),(playpauseresults[0][2],playpauseresults[0][3]),playpauseresults[1]])
     pygame.draw.rect(window, playpausecol, playpauseresults[2])
+    pygame.draw.polygon(window, playpauseimagecol, [(playpauseresults[2][0]+playpauseresults[2][2]/4,playpauseresults[2][1]+playpauseresults[2][3]/4),
+                                                    (playpauseresults[2][0]+playpauseresults[2][2]/4,playpauseresults[2][1]+playpauseresults[2][3]-playpauseresults[2][3]/4),
+                                                    (playpauseresults[2][0]+playpauseresults[2][2]-playpauseresults[2][2]/4,playpauseresults[2][1]+playpauseresults[2][3]/2)])
     pygame.draw.polygon(window, mutetop, [(mutebuttonresults[0][0],mutebuttonresults[0][1]),(mutebuttonresults[0][2],mutebuttonresults[0][1]),mutebuttonresults[1]])
     pygame.draw.polygon(window, mutesid, [(mutebuttonresults[0][0],mutebuttonresults[0][1]),(mutebuttonresults[0][0],mutebuttonresults[0][3]),mutebuttonresults[1]])
     pygame.draw.polygon(window, mutesid, [(mutebuttonresults[0][2],mutebuttonresults[0][1]),(mutebuttonresults[0][2],mutebuttonresults[0][3]),mutebuttonresults[1]])
@@ -115,10 +117,12 @@ def main():
     dashsound = pygame.mixer.Sound("dash.ogg")
     dotsound = pygame.mixer.Sound("dot.ogg")
     downsound = pygame.mixer.Sound("keydown.ogg")
+    breaksound = pygame.mixer.Sound("break.ogg")
 
     dashsound.set_volume(maxsoundvolume)
     dotsound.set_volume(maxsoundvolume)
     downsound.set_volume(maxsoundvolume)
+    breaksound.set_volume(maxsoundvolume)
 
     muted = False
 
@@ -255,11 +259,12 @@ def main():
     key = ""
     end = time()
     start = 0
+    playbackactive = False
 
     keydown = False
     while True:
+        #detecting the physical key
         if onapi:
-            #detecting the physical key
             if (GPIO.input(gpiokey) == False and keydown == False):
                 keydown = True
                 start = time()
@@ -286,7 +291,6 @@ def main():
                 else:
                     keystring += "-"
                 pygame.display.update()
-
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -338,7 +342,7 @@ def main():
                 pygame.display.update()
                 end = time()
 
-                #detecting if the play/pause button has been hit
+            #detecting if the play/pause button has been hit
             elif event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > playpauseresults[0][0] and event.pos[0] < playpauseresults[0][2] and event.pos[1] > playpauseresults[0][1] and event.pos[1] < playpauseresults[0][3]:
                 key = "PLAYPAUSE"
                 pygame.draw.polygon(window, playpausebot, [(playpauseresults[0][0],playpauseresults[0][1]),(playpauseresults[0][2],playpauseresults[0][1]),playpauseresults[1]])
@@ -346,17 +350,25 @@ def main():
                 pygame.draw.polygon(window, playpausesiddown, [(playpauseresults[0][2],playpauseresults[0][1]),(playpauseresults[0][2],playpauseresults[0][3]),playpauseresults[1]])
                 pygame.draw.polygon(window, playpausetop, [(playpauseresults[0][0],playpauseresults[0][3]),(playpauseresults[0][2],playpauseresults[0][3]),playpauseresults[1]])
                 pygame.draw.rect(window, playpausesid, playpauseresults[2])
+                pygame.draw.polygon(window, playpauseimagecol, [(playpauseresults[2][0]+playpauseresults[2][2]/4,2+playpauseresults[2][1]+playpauseresults[2][3]/4),
+                                                                (playpauseresults[2][0]+playpauseresults[2][2]/4,2+playpauseresults[2][1]+playpauseresults[2][3]-playpauseresults[2][3]/4),
+                                                                (playpauseresults[2][0]+playpauseresults[2][2]-playpauseresults[2][2]/4,2+playpauseresults[2][1]+playpauseresults[2][3]/2)])
                 pygame.display.update()
+
             elif event.type == MOUSEBUTTONUP and event.button == 1 and key == "PLAYPAUSE":
+                key = ""
                 pygame.draw.polygon(window, playpausetop, [(playpauseresults[0][0],playpauseresults[0][1]),(playpauseresults[0][2],playpauseresults[0][1]),playpauseresults[1]])
                 pygame.draw.polygon(window, playpausesid, [(playpauseresults[0][0],playpauseresults[0][1]),(playpauseresults[0][0],playpauseresults[0][3]),playpauseresults[1]])
                 pygame.draw.polygon(window, playpausesid, [(playpauseresults[0][2],playpauseresults[0][1]),(playpauseresults[0][2],playpauseresults[0][3]),playpauseresults[1]])
                 pygame.draw.polygon(window, playpausebot, [(playpauseresults[0][0],playpauseresults[0][3]),(playpauseresults[0][2],playpauseresults[0][3]),playpauseresults[1]])
                 pygame.draw.rect(window, playpausecol, playpauseresults[2])
+                pygame.draw.rect(window, playpauseimagecol, (playpauseresults[2][0]+playpauseresults[2][2]/4,playpauseresults[2][1]+playpauseresults[2][3]/4,playpauseresults[2][2]-5*playpauseresults[2][2]/6,playpauseresults[2][3]-playpauseresults[2][3]/2))
+                pygame.draw.rect(window, playpauseimagecol, (playpauseresults[2][0]+7*playpauseresults[2][2]/12,playpauseresults[2][1]+playpauseresults[2][3]/4,playpauseresults[2][2]-5*playpauseresults[2][2]/6,playpauseresults[2][3]-playpauseresults[2][3]/2))
                 pygame.display.update()
                 end = time()
+                playbackactive = True
 
-                #detecting if the clear button has been hit
+            #detecting if the clear button has been hit
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > clearbuttonresults[0][1] and event.pos[0] < clearbuttonresults[0][3] and event.pos[1] > clearbuttonresults[0][0] and event.pos[1] < clearbuttonresults[0][2]):
                 word = ""
                 keystring = ""
@@ -370,7 +382,6 @@ def main():
                 window.blit(cleartext,((clearbuttonresults[0][1]+clearbuttonresults[0][3])/2-cleartext.get_width()/2,2+(clearbuttonresults[0][0]+clearbuttonresults[0][2])/2-cleartext.get_height()/2))
                 pygame.display.update()
                 end = time()
-
             elif event.type == MOUSEBUTTONUP and event.button == 1 and key == "CLEAR":
                 key = ""
                 pygame.draw.rect(window, charstreambackgroundcol, charstreamresults[1])
@@ -381,8 +392,9 @@ def main():
                 pygame.draw.rect(window,clearcol,clearbuttonresults[3])
                 window.blit(cleartext,((clearbuttonresults[0][1]+clearbuttonresults[0][3])/2-cleartext.get_width()/2,(clearbuttonresults[0][0]+clearbuttonresults[0][2])/2-cleartext.get_height()/2))
                 pygame.display.update()
-                #detecting the on-screen keyboard being clicked
-                #1
+
+            #detecting the on-screen keyboard being clicked
+            #1
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][0][0] and event.pos[0] < keysposresults[0][0][2] and event.pos[1] > keysposresults[0][0][1] and event.pos[1] < keysposresults[0][0][3]) or (event.type == KEYDOWN and event.key == K_1):
                 key = "1"
                 updatekey(keysposresults[0][0])
@@ -395,7 +407,7 @@ def main():
                 window.blit(_1,((keysposresults[0][0][0]+keysposresults[0][0][2])/2-_1.get_width()/2,(keysposresults[0][0][1]+keysposresults[0][0][3])/2-_1.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #2
+            #2
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][1][0] and event.pos[0] < keysposresults[0][1][2] and event.pos[1] > keysposresults[0][1][1] and event.pos[1] < keysposresults[0][1][3]) or (event.type == KEYDOWN and event.key == K_2):
                 key = "2"
                 updatekey(keysposresults[0][1])
@@ -408,7 +420,7 @@ def main():
                 window.blit(_2,((keysposresults[0][1][0]+keysposresults[0][1][2])/2-_2.get_width()/2,(keysposresults[0][1][1]+keysposresults[0][1][3])/2-_2.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #3
+            #3
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][2][0] and event.pos[0] < keysposresults[0][2][2] and event.pos[1] > keysposresults[0][2][1] and event.pos[1] < keysposresults[0][2][3]) or (event.type == KEYDOWN and event.key == K_3):
                 key = "3"
                 updatekey(keysposresults[0][2])
@@ -421,7 +433,7 @@ def main():
                 window.blit(_3,((keysposresults[0][2][0]+keysposresults[0][2][2])/2-_3.get_width()/2,(keysposresults[0][2][1]+keysposresults[0][2][3])/2-_3.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #4
+            #4
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][3][0] and event.pos[0] < keysposresults[0][3][2] and event.pos[1] > keysposresults[0][3][1] and event.pos[1] < keysposresults[0][3][3]) or (event.type == KEYDOWN and event.key == K_4):
                 key = "4"
                 end = time()
@@ -435,7 +447,7 @@ def main():
                 window.blit(_4,((keysposresults[0][3][0]+keysposresults[0][3][2])/2-_4.get_width()/2,(keysposresults[0][3][1]+keysposresults[0][3][3])/2-_4.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #5
+            #5
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][4][0] and event.pos[0] < keysposresults[0][4][2] and event.pos[1] > keysposresults[0][4][1] and event.pos[1] < keysposresults[0][4][3]) or (event.type == KEYDOWN and event.key == K_5):
                 key = "5"
                 updatekey(keysposresults[0][4])
@@ -448,7 +460,7 @@ def main():
                 window.blit(_5,((keysposresults[0][4][0]+keysposresults[0][4][2])/2-_5.get_width()/2,(keysposresults[0][4][1]+keysposresults[0][4][3])/2-_5.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #6
+            #6
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][5][0] and event.pos[0] < keysposresults[0][5][2] and event.pos[1] > keysposresults[0][5][1] and event.pos[1] < keysposresults[0][5][3]) or (event.type == KEYDOWN and event.key == K_6):
                 key = "6"
                 updatekey(keysposresults[0][5])
@@ -461,7 +473,7 @@ def main():
                 window.blit(_6,((keysposresults[0][5][0]+keysposresults[0][5][2])/2-_6.get_width()/2,(keysposresults[0][5][1]+keysposresults[0][5][3])/2-_6.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #7
+            #7
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][6][0] and event.pos[0] < keysposresults[0][6][2] and event.pos[1] > keysposresults[0][6][1] and event.pos[1] < keysposresults[0][6][3]) or (event.type == KEYDOWN and event.key == K_7):
                 key = "7"
                 updatekey(keysposresults[0][6])
@@ -474,7 +486,7 @@ def main():
                 window.blit(_7,((keysposresults[0][6][0]+keysposresults[0][6][2])/2-_7.get_width()/2,(keysposresults[0][6][1]+keysposresults[0][6][3])/2-_7.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #8
+            #8
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][7][0] and event.pos[0] < keysposresults[0][7][2] and event.pos[1] > keysposresults[0][7][1] and event.pos[1] < keysposresults[0][7][3]) or (event.type == KEYDOWN and event.key == K_8):
                 key = "8"
                 updatekey(keysposresults[0][7])
@@ -487,7 +499,7 @@ def main():
                 window.blit(_8,((keysposresults[0][7][0]+keysposresults[0][7][2])/2-_8.get_width()/2,(keysposresults[0][7][1]+keysposresults[0][7][3])/2-_8.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #9
+            #9
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][8][0] and event.pos[0] < keysposresults[0][8][2] and event.pos[1] > keysposresults[0][8][1] and event.pos[1] < keysposresults[0][8][3]) or (event.type == KEYDOWN and event.key == K_9):
                 key = "9"
                 updatekey(keysposresults[0][8])
@@ -500,7 +512,7 @@ def main():
                 window.blit(_9,((keysposresults[0][8][0]+keysposresults[0][8][2])/2-_9.get_width()/2,(keysposresults[0][8][1]+keysposresults[0][8][3])/2-_9.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #0
+            #0
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][9][0] and event.pos[0] < keysposresults[0][9][2] and event.pos[1] > keysposresults[0][9][1] and event.pos[1] < keysposresults[0][9][3]) or (event.type == KEYDOWN and event.key == K_0):
                 key = "0"
                 updatekey(keysposresults[0][9])
@@ -513,7 +525,7 @@ def main():
                 window.blit(_0,((keysposresults[0][9][0]+keysposresults[0][9][2])/2-_0.get_width()/2,(keysposresults[0][9][1]+keysposresults[0][9][3])/2-_0.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #Q
+            #Q
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][10][0] and event.pos[0] < keysposresults[0][10][2] and event.pos[1] > keysposresults[0][10][1] and event.pos[1] < keysposresults[0][10][3]) or (event.type == KEYDOWN and event.key == K_q):
                 key = "Q"
                 updatekey(keysposresults[0][10])
@@ -526,7 +538,7 @@ def main():
                 window.blit(Q,((keysposresults[0][10][0]+keysposresults[0][10][2])/2-Q.get_width()/2,(keysposresults[0][10][1]+keysposresults[0][10][3])/2-Q.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #W
+            #W
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][11][0] and event.pos[0] < keysposresults[0][11][2] and event.pos[1] > keysposresults[0][11][1] and event.pos[1] < keysposresults[0][11][3]) or (event.type == KEYDOWN and event.key == K_w):
                 key = "W"
                 updatekey(keysposresults[0][11])
@@ -539,7 +551,7 @@ def main():
                 window.blit(W,((keysposresults[0][11][0]+keysposresults[0][11][2])/2-W.get_width()/2,(keysposresults[0][11][1]+keysposresults[0][11][3])/2-W.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #E
+            #E
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][12][0] and event.pos[0] < keysposresults[0][12][2] and event.pos[1] > keysposresults[0][12][1] and event.pos[1] < keysposresults[0][12][3]) or (event.type == KEYDOWN and event.key == K_e):
                 key = "E"
                 updatekey(keysposresults[0][12])
@@ -552,7 +564,7 @@ def main():
                 window.blit(E,((keysposresults[0][12][0]+keysposresults[0][12][2])/2-E.get_width()/2,(keysposresults[0][12][1]+keysposresults[0][12][3])/2-E.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #R
+            #R
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][13][0] and event.pos[0] < keysposresults[0][13][2] and event.pos[1] > keysposresults[0][13][1] and event.pos[1] < keysposresults[0][13][3]) or (event.type == KEYDOWN and event.key == K_r):
                 key = "R"
                 updatekey(keysposresults[0][13])
@@ -565,7 +577,7 @@ def main():
                 window.blit(R,((keysposresults[0][13][0]+keysposresults[0][13][2])/2-R.get_width()/2,(keysposresults[0][13][1]+keysposresults[0][13][3])/2-R.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #T
+            #T
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][14][0] and event.pos[0] < keysposresults[0][14][2] and event.pos[1] > keysposresults[0][14][1] and event.pos[1] < keysposresults[0][14][3]) or (event.type == KEYDOWN and event.key == K_t):
                 key = "T"
                 updatekey(keysposresults[0][14])
@@ -578,7 +590,7 @@ def main():
                 window.blit(T,((keysposresults[0][14][0]+keysposresults[0][14][2])/2-T.get_width()/2,(keysposresults[0][14][1]+keysposresults[0][14][3])/2-T.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #Y
+            #Y
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][15][0] and event.pos[0] < keysposresults[0][15][2] and event.pos[1] > keysposresults[0][15][1] and event.pos[1] < keysposresults[0][15][3]) or (event.type == KEYDOWN and event.key == K_y):
                 key = "Y"
                 updatekey(keysposresults[0][15])
@@ -591,7 +603,7 @@ def main():
                 window.blit(Y,((keysposresults[0][15][0]+keysposresults[0][15][2])/2-Y.get_width()/2,(keysposresults[0][15][1]+keysposresults[0][15][3])/2-Y.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #U
+            #U
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][16][0] and event.pos[0] < keysposresults[0][16][2] and event.pos[1] > keysposresults[0][16][1] and event.pos[1] < keysposresults[0][16][3]) or (event.type == KEYDOWN and event.key == K_u):
                 key = "U"
                 updatekey(keysposresults[0][16])
@@ -604,7 +616,7 @@ def main():
                 window.blit(U,((keysposresults[0][16][0]+keysposresults[0][16][2])/2-U.get_width()/2,(keysposresults[0][16][1]+keysposresults[0][16][3])/2-U.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #I
+            #I
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][17][0] and event.pos[0] < keysposresults[0][17][2] and event.pos[1] > keysposresults[0][17][1] and event.pos[1] < keysposresults[0][17][3]) or (event.type == KEYDOWN and event.key == K_i):
                 key = "I"
                 updatekey(keysposresults[0][17])
@@ -617,7 +629,7 @@ def main():
                 window.blit(I,((keysposresults[0][17][0]+keysposresults[0][17][2])/2-I.get_width()/2,(keysposresults[0][17][1]+keysposresults[0][17][3])/2-I.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #O
+            #O
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][18][0] and event.pos[0] < keysposresults[0][18][2] and event.pos[1] > keysposresults[0][18][1] and event.pos[1] < keysposresults[0][18][3]) or (event.type == KEYDOWN and event.key == K_o):
                 key = "O"
                 updatekey(keysposresults[0][18])
@@ -630,7 +642,7 @@ def main():
                 window.blit(O,((keysposresults[0][18][0]+keysposresults[0][18][2])/2-O.get_width()/2,(keysposresults[0][18][1]+keysposresults[0][18][3])/2-O.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #P
+            #P
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][19][0] and event.pos[0] < keysposresults[0][19][2] and event.pos[1] > keysposresults[0][19][1] and event.pos[1] < keysposresults[0][19][3]) or (event.type == KEYDOWN and event.key == K_p):
                 key = "P"
                 updatekey(keysposresults[0][19])
@@ -643,7 +655,7 @@ def main():
                 window.blit(P,((keysposresults[0][19][0]+keysposresults[0][19][2])/2-P.get_width()/2,(keysposresults[0][19][1]+keysposresults[0][19][3])/2-P.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #A
+            #A
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][20][0] and event.pos[0] < keysposresults[0][20][2] and event.pos[1] > keysposresults[0][20][1] and event.pos[1] < keysposresults[0][20][3]) or (event.type == KEYDOWN and event.key == K_a):
                 key = "A"
                 updatekey(keysposresults[0][20])
@@ -656,7 +668,7 @@ def main():
                 window.blit(A,((keysposresults[0][20][0]+keysposresults[0][20][2])/2-A.get_width()/2,(keysposresults[0][20][1]+keysposresults[0][20][3])/2-A.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #S
+            #S
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][21][0] and event.pos[0] < keysposresults[0][21][2] and event.pos[1] > keysposresults[0][21][1] and event.pos[1] < keysposresults[0][21][3]) or (event.type == KEYDOWN and event.key == K_s):
                 key = "S"
                 updatekey(keysposresults[0][21])
@@ -669,7 +681,7 @@ def main():
                 window.blit(S,((keysposresults[0][21][0]+keysposresults[0][21][2])/2-S.get_width()/2,(keysposresults[0][21][1]+keysposresults[0][21][3])/2-Q.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #D
+            #D
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][22][0] and event.pos[0] < keysposresults[0][22][2] and event.pos[1] > keysposresults[0][22][1] and event.pos[1] < keysposresults[0][22][3]) or (event.type == KEYDOWN and event.key == K_d):
                 key = "D"
                 updatekey(keysposresults[0][22])
@@ -682,7 +694,7 @@ def main():
                 window.blit(D,((keysposresults[0][22][0]+keysposresults[0][22][2])/2-D.get_width()/2,(keysposresults[0][22][1]+keysposresults[0][22][3])/2-Q.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #F
+            #F
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][23][0] and event.pos[0] < keysposresults[0][23][2] and event.pos[1] > keysposresults[0][23][1] and event.pos[1] < keysposresults[0][23][3]) or (event.type == KEYDOWN and event.key == K_f):
                 key = "F"
                 updatekey(keysposresults[0][23])
@@ -695,7 +707,7 @@ def main():
                 window.blit(F,((keysposresults[0][23][0]+keysposresults[0][23][2])/2-F.get_width()/2,(keysposresults[0][23][1]+keysposresults[0][23][3])/2-F.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #G
+            #G
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][24][0] and event.pos[0] < keysposresults[0][24][2] and event.pos[1] > keysposresults[0][24][1] and event.pos[1] < keysposresults[0][24][3]) or (event.type == KEYDOWN and event.key == K_g):
                 key = "G"
                 updatekey(keysposresults[0][24])
@@ -708,7 +720,7 @@ def main():
                 window.blit(G,((keysposresults[0][24][0]+keysposresults[0][24][2])/2-G.get_width()/2,(keysposresults[0][24][1]+keysposresults[0][24][3])/2-G.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #H
+            #H
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][25][0] and event.pos[0] < keysposresults[0][25][2] and event.pos[1] > keysposresults[0][25][1] and event.pos[1] < keysposresults[0][25][3]) or (event.type == KEYDOWN and event.key == K_h):
                 key = "H"
                 updatekey(keysposresults[0][25])
@@ -721,7 +733,7 @@ def main():
                 window.blit(H,((keysposresults[0][25][0]+keysposresults[0][25][2])/2-H.get_width()/2,(keysposresults[0][25][1]+keysposresults[0][25][3])/2-H.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #J
+            #J
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][26][0] and event.pos[0] < keysposresults[0][26][2] and event.pos[1] > keysposresults[0][26][1] and event.pos[1] < keysposresults[0][26][3]) or (event.type == KEYDOWN and event.key == K_j):
                 key = "J"
                 updatekey(keysposresults[0][26])
@@ -734,7 +746,7 @@ def main():
                 window.blit(J,((keysposresults[0][26][0]+keysposresults[0][26][2])/2-J.get_width()/2,(keysposresults[0][26][1]+keysposresults[0][26][3])/2-J.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #K
+            #K
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][27][0] and event.pos[0] < keysposresults[0][27][2] and event.pos[1] > keysposresults[0][27][1] and event.pos[1] < keysposresults[0][27][3]) or (event.type == KEYDOWN and event.key == K_k):
                 key = "K"
                 updatekey(keysposresults[0][27])
@@ -747,7 +759,7 @@ def main():
                 window.blit(K,((keysposresults[0][27][0]+keysposresults[0][27][2])/2-K.get_width()/2,(keysposresults[0][27][1]+keysposresults[0][27][3])/2-K.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #L
+            #L
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][28][0] and event.pos[0] < keysposresults[0][28][2] and event.pos[1] > keysposresults[0][28][1] and event.pos[1] < keysposresults[0][28][3]) or (event.type == KEYDOWN and event.key == K_l):
                 key = "L"
                 updatekey(keysposresults[0][28])
@@ -760,7 +772,7 @@ def main():
                 window.blit(L,((keysposresults[0][28][0]+keysposresults[0][28][2])/2-L.get_width()/2,(keysposresults[0][28][1]+keysposresults[0][28][3])/2-L.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #Z
+            #Z
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][29][0] and event.pos[0] < keysposresults[0][29][2] and event.pos[1] > keysposresults[0][29][1] and event.pos[1] < keysposresults[0][29][3]) or (event.type == KEYDOWN and event.key == K_z):
                 key = "Z"
                 updatekey(keysposresults[0][29])
@@ -773,7 +785,7 @@ def main():
                 window.blit(Z,((keysposresults[0][29][0]+keysposresults[0][29][2])/2-Z.get_width()/2,(keysposresults[0][29][1]+keysposresults[0][29][3])/2-Z.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #X
+            #X
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][30][0] and event.pos[0] < keysposresults[0][30][2] and event.pos[1] > keysposresults[0][30][1] and event.pos[1] < keysposresults[0][30][3]) or (event.type == KEYDOWN and event.key == K_x):
                 key = "X"
                 updatekey(keysposresults[0][30])
@@ -786,7 +798,7 @@ def main():
                 window.blit(X,((keysposresults[0][30][0]+keysposresults[0][30][2])/2-X.get_width()/2,(keysposresults[0][30][1]+keysposresults[0][30][3])/2-X.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #C
+            #C
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][31][0] and event.pos[0] < keysposresults[0][31][2] and event.pos[1] > keysposresults[0][31][1] and event.pos[1] < keysposresults[0][31][3]) or (event.type == KEYDOWN and event.key == K_c):
                 key = "C"
                 updatekey(keysposresults[0][31])
@@ -799,7 +811,7 @@ def main():
                 window.blit(C,((keysposresults[0][31][0]+keysposresults[0][31][2])/2-C.get_width()/2,(keysposresults[0][31][1]+keysposresults[0][31][3])/2-C.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #V
+            #V
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][32][0] and event.pos[0] < keysposresults[0][32][2] and event.pos[1] > keysposresults[0][32][1] and event.pos[1] < keysposresults[0][32][3]) or (event.type == KEYDOWN and event.key == K_v):
                 key = "V"
                 updatekey(keysposresults[0][32])
@@ -812,7 +824,7 @@ def main():
                 window.blit(V,((keysposresults[0][32][0]+keysposresults[0][32][2])/2-V.get_width()/2,(keysposresults[0][32][1]+keysposresults[0][32][3])/2-V.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #B
+            #B
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][33][0] and event.pos[0] < keysposresults[0][33][2] and event.pos[1] > keysposresults[0][33][1] and event.pos[1] < keysposresults[0][33][3]) or (event.type == KEYDOWN and event.key == K_b):
                 key = "B"
                 updatekey(keysposresults[0][33])
@@ -825,7 +837,7 @@ def main():
                 window.blit(B,((keysposresults[0][33][0]+keysposresults[0][33][2])/2-B.get_width()/2,(keysposresults[0][33][1]+keysposresults[0][33][3])/2-B.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #N
+            #N
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][34][0] and event.pos[0] < keysposresults[0][34][2] and event.pos[1] > keysposresults[0][34][1] and event.pos[1] < keysposresults[0][34][3]) or (event.type == KEYDOWN and event.key == K_n):
                 key = "N"
                 updatekey(keysposresults[0][34])
@@ -838,7 +850,7 @@ def main():
                 window.blit(N,((keysposresults[0][34][0]+keysposresults[0][34][2])/2-N.get_width()/2,(keysposresults[0][34][1]+keysposresults[0][34][3])/2-N.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #M
+            #M
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][35][0] and event.pos[0] < keysposresults[0][35][2] and event.pos[1] > keysposresults[0][35][1] and event.pos[1] < keysposresults[0][35][3]) or (event.type == KEYDOWN and event.key == K_m):
                 key = "M"
                 updatekey(keysposresults[0][35])
@@ -851,7 +863,7 @@ def main():
                 window.blit(M,((keysposresults[0][35][0]+keysposresults[0][35][2])/2-M.get_width()/2,(keysposresults[0][35][1]+keysposresults[0][35][3])/2-Q.get_height()/2))
                 key = ""
                 pygame.display.update()
-                #Backspace
+            #Backspace
             elif (event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] > keysposresults[0][36][0] and event.pos[0] < keysposresults[0][36][2] and event.pos[1] > keysposresults[0][36][1] and event.pos[1] < keysposresults[0][36][3]) or (event.type == KEYDOWN and event.key == K_BACKSPACE):
                 key = "BK"
                 updatekey(keysposresults[0][36])
@@ -875,7 +887,7 @@ def main():
                 key = ""
                 pygame.display.update()
 
-                #The space bar or on-screen key
+            #The space bar or on-screen key
             elif (event.type == KEYDOWN and event.key == K_SPACE) or (event.type == MOUSEBUTTONDOWN and event.button == 1 and sqrt(((event.pos[0]-mckeycomponents[0][0])**2)+((event.pos[1]-mckeycomponents[0][1])**2)) < mckeycomponents[1]):
                 start = time()
                 if soundactive:
@@ -901,6 +913,7 @@ def main():
                     keystring += "-"
 
                 pygame.display.update()
+
         if keystring != oldkeystring:
             pygame.draw.rect(window, charstreambackgroundcol, morsestreamresults[1])
             oldkeystring = keystring
@@ -1014,9 +1027,6 @@ def main():
                             pygame.draw.rect(window, backgroundcol, demoalertresults[0])
                             pygame.draw.rect(window, backgroundcol, demoalertresults[1])
                             pygame.display.update()
-                        if event.type == QUIT:
-                            pygame.quit()
-                            exit()
                     if onapi:
                         if GPIO.input(gpiokey) == False:
                             indemo = False
@@ -1132,12 +1142,88 @@ def main():
                 start = time()
                 end = time()
 
+        #go into playback mode, playing morse code through speakers
+        if playbackactive:
+            if len(word) != 0:
+                soundstring = ""
+                for character in word:
+                    soundstring += reverse_lookup[character] + " "
+                soundstring = soundstring[:-1]
+                recentspace = False
+                wordminusone = len(word) -1
+                characterindex = 0
+                wordxpos = xres/2-theword.get_width()/2
+                wordypos = (charstreamresults[0][1]+charstreamresults[0][1]+charstreamresults[0][3])/2-theword.get_height()/2
+                highlightedword = charstreamfont.render(" "*characterindex+word[characterindex]+" "*(wordminusone-characterindex),True,playbacktextcol)
+                window.blit(highlightedword,(wordxpos,wordypos))
+                pygame.display.update()
+
+                while playbackactive:
+                    for event in pygame.event.get():
+                        if event.type == QUIT:
+                            pygame.quit()
+                            exit()
+                        elif event.type == KEYDOWN and event.key == K_ESCAPE and escapetoclose:
+                            pygame.quit()
+                            exit()
+                        elif event.type == KEYDOWN or event.type == MOUSEBUTTONDOWN:
+                            playbackactive = False
+                            playbackchannel.stop()
+                            window.blit(theword,(wordxpos,wordypos))
+                            pygame.draw.rect(window, playpausesid, playpauseresults[2])
+                            pygame.draw.polygon(window, playpauseimagecol, [(playpauseresults[2][0]+playpauseresults[2][2]/4,playpauseresults[2][1]+playpauseresults[2][3]/4),
+                                                                            (playpauseresults[2][0]+playpauseresults[2][2]/4,playpauseresults[2][1]+playpauseresults[2][3]-playpauseresults[2][3]/4),
+                                                                            (playpauseresults[2][0]+playpauseresults[2][2]-playpauseresults[2][2]/4,playpauseresults[2][1]+playpauseresults[2][3]/2)])
+                            pygame.display.update()
+                            end = time()
+                    if playbackactive:
+                        if playbackchannel.get_queue() == None:
+                            if len(soundstring) == 0:
+                                playbackactive = False
+                                end = time()
+                                window.blit(theword,(wordxpos,wordypos))
+                                pygame.draw.rect(window, playpausesid, playpauseresults[2])
+                                pygame.draw.polygon(window, playpauseimagecol, [(playpauseresults[2][0]+playpauseresults[2][2]/4,playpauseresults[2][1]+playpauseresults[2][3]/4),
+                                                                                (playpauseresults[2][0]+playpauseresults[2][2]/4,playpauseresults[2][1]+playpauseresults[2][3]-playpauseresults[2][3]/4),
+                                                                                (playpauseresults[2][0]+playpauseresults[2][2]-playpauseresults[2][2]/4,playpauseresults[2][1]+playpauseresults[2][3]/2)])
+                                pygame.display.update()
+                            elif soundstring[0] == " ":
+                                characterindex += 1
+                                playbackchannel.queue(breaksound)
+                                soundstring = soundstring[1:]
+                                recentspace = True
+                            elif soundstring[0] == ".":
+                                playbackchannel.queue(dotsound)
+                                soundstring = soundstring[1:]
+                                if recentspace:
+                                    window.blit(theword,(wordxpos,wordypos))
+                                    highlightedword = charstreamfont.render(" "*characterindex+word[characterindex]+" "*(wordminusone-characterindex),True,playbacktextcol)
+                                    window.blit(highlightedword,(wordxpos,wordypos))
+                                    pygame.display.update()
+                                    recentspace = False
+                            elif soundstring[0] == "-":
+                                playbackchannel.queue(dashsound)
+                                soundstring = soundstring[1:]
+                                if recentspace:
+                                    window.blit(theword,(wordxpos,wordypos))
+                                    highlightedword = charstreamfont.render(" "*characterindex+word[characterindex]+" "*(wordminusone-characterindex),True,playbacktextcol)
+                                    window.blit(highlightedword,(wordxpos,wordypos))
+                                    pygame.display.update()
+                                    recentspace = False
+            else:
+                playbackactive = False
+                pygame.draw.rect(window, playpausesid, playpauseresults[2])
+                pygame.draw.polygon(window, playpauseimagecol, [(playpauseresults[2][0]+playpauseresults[2][2]/4,playpauseresults[2][1]+playpauseresults[2][3]/4),
+                                                                (playpauseresults[2][0]+playpauseresults[2][2]/4,playpauseresults[2][1]+playpauseresults[2][3]-playpauseresults[2][3]/4),
+                                                                (playpauseresults[2][0]+playpauseresults[2][2]-playpauseresults[2][2]/4,playpauseresults[2][1]+playpauseresults[2][3]/2)])
+                pygame.display.update()
+
+#exception catching loop
 while True:
     try:
         main()
     except(SystemExit):
         break
-
     except Exception as e:
         #this is here so when it breaks at any point in full screen, it won't trap the user in full screen and force a restart
         print("An error has occured:")

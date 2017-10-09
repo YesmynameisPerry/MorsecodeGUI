@@ -102,7 +102,10 @@ charstreamoutlinecol = (150,150,150)
 charstreambackgroundcol = (10,10,10)
 
 #the colour of the text in the character stream
-charstreamtextcol = (200,255,200)
+charstreamtextcol = (200,200,200)
+
+#the colour of the character currently being played in playback mode
+playbacktextcol = (155,255,155)
 
 #the three colours that the morse code can be, typing, recognised, and error
 morsewritecol = (155,155,155)
