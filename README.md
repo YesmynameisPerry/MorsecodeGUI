@@ -20,9 +20,9 @@ Here's it running in demo mode (after having been left idle for x amount of time
 - Error handling for both user modification of config.py and during runtime
 - A clear button to remove all text from the screen
 - An on screen way to mute the sounds
+- Playback to hear what you've typed
 
 ## Features still to add:
-- Playback to hear what you've typed
 - Auto-update (a call to check this repo on start to check that it's the latest version)
 
 ## How To:
@@ -59,3 +59,5 @@ Just ensure that all words are inside quotations `"like this"` or `'like this'` 
 
 There's also a number right next to`demowords` called `demotime`, which is simply the number of seconds that the program has to be left alone to begin cycling through words. Feel free to change this as well.
 To turn off demo mode completely just delete all the words in `demowords`, so it looks like this: `demowords = []` and demo mode will never begin.
+
+There's also a flag variable called `randomword` which, if `True`, will randomly pick words from `demowords` when in demo mode. If it's set to `False` then demo mode will go through `demowords` in order, looping back to the start once it reaches the end.
