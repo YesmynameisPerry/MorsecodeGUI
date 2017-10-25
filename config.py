@@ -159,7 +159,7 @@ maxsoundvolume = (1)
 #below this line is checking that any modifications above this line aren't going to break anything.
 
 #checking that all variables that need to exist still exist
-print("Don't forget to check that variables still exist")
+#print("Don't forget to check that variables still exist")
 
 #checking all the values in the colours are within the acceptable ranges
 colourvars = [clearcol,cleartop,clearsid,clearsiddown,cleartextcol,backgroundcol,keyboardcol,keycol,keytop,keysid,keysiddown,keybot,keytextcol,charstreamoutlinecol,charstreambackgroundcol,charstreamtextcol,morsewritecol,morsegoodcol,morsebadcol,mckeytopbox,mckeyvertbar,mckeycircle,mckeyvertbardark,mckeycircledark]
